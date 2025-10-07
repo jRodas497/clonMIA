@@ -19,16 +19,6 @@ type MBR struct {
     MbrPartitions    [4]Particion // Tabla de particiones (máximo 4 entradas)
 }
 
-// Encode serializa la estructura MBR en un archivo
-func (mbr *MBR) Encode(file *os.File) error {
-    return Utils.EscribirAArchivo(file, 0, mbr)
-}
-
-// Decode deserializa la estructura MBR desde un archivo
-func (mbr *MBR) Decode(file *os.File) error {
-    return Utils.LeerDeArchivo(file, 0, mbr)
-}
-
 // Serializa la estructura MBR hacia el archivo
 func (mbr *MBR) Codificar(archivo *os.File) error {
     return Utils.EscribirAArchivo(archivo, 0, mbr) // Persistir MBR al inicio del archivo

@@ -39,6 +39,24 @@ func (sb *SuperBlock) Decodificar(archivo *os.File, desplazamiento int64) error 
 	return Utils.LeerDeArchivo(archivo, desplazamiento, sb)
 }
 
+// InicioJournal retorna el byte donde inicia el journal
+func (sb *SuperBlock) InicioJournal() int32 {
+	// El journal está justo antes del inicio del bitmap de inodos
+	journalSize := int32(binary.Size(Journal{}))
+	start := sb.S_bm_inode_start - ENTRADAS_JOURNAL*journalSize
+	fmt.Printf("[DEBUG] Superblock.InicioJournal: bm_inode_start=%d, journalSize=%d, entries=%d -> start=%d\n",
+		sb.S_bm_inode_start, journalSize, ENTRADAS_JOURNAL, start)
+	return start
+}
+
+// FinJournal calcula el final del área de journaling
+func (sb *SuperBlock) FinJournal() int32 {
+	end := sb.S_bm_inode_start
+	fmt.Printf("[DEBUG] Superblock.FinJournal: bm_inode_start=%d -> end=%d\n",
+		sb.S_bm_inode_start, end)
+	return end
+}
+
 func (sb *SuperBlock) CrearArchivoUsuarios(archivo *os.File) error {
 	inodoRaiz := &INodo{
 		I_uid:   1,
@@ -429,4 +447,150 @@ func (sb *SuperBlock) ActualizarSuperblockDespuesAsignacionInodo() {
 
 	// Actualiza el puntero al primer inodo libre
 	sb.S_first_ino += sb.S_inode_size
+}
+
+// CrearArchivoUsuariosExt3 inicializa el sistema de archivos EXT3 con journaling
+func (sb *SuperBlock) CrearArchivoUsuariosExt3(archivo *os.File, inicioJournaling int64) error {
+    // 1. Inicializar el área de journaling para la partición si es necesario
+    fmt.Println("Inicializando área de journaling para EXT3...")
+    err := InicializarAreaJournal(archivo, inicioJournaling, ENTRADAS_JOURNAL)
+    if err != nil {
+        return fmt.Errorf("error al inicializar el área de journaling: %w", err)
+    }
+
+    // 2. Obtener el siguiente índice de journal disponible
+    siguienteIndiceJournal, err := ObtenerSiguienteIndiceJournalVacio(archivo, inicioJournaling, ENTRADAS_JOURNAL)
+    if err != nil {
+        return fmt.Errorf("error obteniendo el siguiente índice de journal: %w", err)
+    }
+    fmt.Printf("Siguiente índice de journal disponible: %d\n", siguienteIndiceJournal)
+
+    // 3. Crear entrada de journal para el directorio raíz
+    err = AgregarEntradaJournal(
+        archivo,
+        inicioJournaling,
+        ENTRADAS_JOURNAL,
+        "mkdir",
+        "/",
+        "",
+        sb,
+    )
+    if err != nil {
+        return fmt.Errorf("error al guardar la entrada de la raíz en el journal: %w", err)
+    }
+
+    // 4. Crear el inodo y bloque para la raíz
+    indiceBloqueRaiz, err := sb.BuscarSiguienteBloqueLibre(archivo)
+    if err != nil {
+        return fmt.Errorf("error al encontrar el primer bloque libre para la raíz: %w", err)
+    }
+
+    bloquesRaiz := [15]int32{indiceBloqueRaiz, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
+
+    inodoRaiz := &Inodo{}
+    err = inodoRaiz.CrearInodo(
+        archivo,
+        sb,
+        '0',
+        0,
+        bloquesRaiz,
+        [3]byte{'7', '7', '7'},
+    )
+    if err != nil {
+        return fmt.Errorf("error al crear el inodo raíz: %w", err)
+    }
+
+    bloqueRaiz := &BloqueCarpeta{
+        B_content: [4]ContenidoCarpeta{
+            {B_name: [12]byte{'.'}, B_inodo: 0},
+            {B_name: [12]byte{'.', '.'}, B_inodo: 0},
+            {B_name: [12]byte{'u', 's', 'e', 'r', 's', '.', 't', 'x', 't'}, B_inodo: sb.S_inodes_count},
+            {B_name: [12]byte{'-'}, B_inodo: -1},
+        },
+    }
+
+    err = sb.ActualizarBitmapBloque(archivo, indiceBloqueRaiz, true)
+    if err != nil {
+        return fmt.Errorf("error actualizando el bitmap de bloques: %w", err)
+    }
+
+    err = bloqueRaiz.Codificar(archivo, int64(sb.S_first_blo))
+    if err != nil {
+        return fmt.Errorf("error serializando el bloque raíz: %w", err)
+    }
+
+    sb.ActualizarSuperblockDespuesAsignacionBloque()
+
+    // 5. Crear el contenido del archivo de usuarios
+    grupoRaiz := NuevoGrupo("1", "root")
+    usuarioRaiz := NuevoUsuario("1", "root", "root", "123")
+    textoUsuarios := fmt.Sprintf("%s\n%s\n", grupoRaiz.ToString(), usuarioRaiz.ToString())
+
+    // 6. Crear una segunda entrada en el journal para el archivo users.txt
+    err = AgregarEntradaJournal(
+        archivo,
+        inicioJournaling,
+        ENTRADAS_JOURNAL,
+        "mkfile",
+        "/users.txt",
+        textoUsuarios,
+        sb,
+    )
+    if err != nil {
+        return fmt.Errorf("error al guardar la entrada del archivo /users.txt en el journal: %w", err)
+    }
+
+    // 7. Resto del código para crear users.txt
+    indiceBloqueUsuarios, err := sb.BuscarSiguienteBloqueLibre(archivo)
+    if err != nil {
+        return fmt.Errorf("error al encontrar el primer bloque libre para /users.txt: %w", err)
+    }
+    bloquesArchivo := [15]int32{indiceBloqueUsuarios, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
+
+    inodoUsuarios := &Inodo{}
+    err = inodoUsuarios.CrearInodo(
+        archivo,
+        sb,
+        '1',
+        int32(len(textoUsuarios)),
+        bloquesArchivo,
+        [3]byte{'7', '7', '7'},
+    )
+    if err != nil {
+        return fmt.Errorf("error al crear el inodo de /users.txt: %w", err)
+    }
+
+    bloqueUsuarios := &BloqueArchivo{
+        B_content: [64]byte{},
+    }
+    bloqueUsuarios.AgregarContenido(textoUsuarios)
+    err = bloqueUsuarios.Codificar(archivo, int64(sb.S_first_blo))
+    if err != nil {
+        return fmt.Errorf("error serializando el bloque de /users.txt: %w", err)
+    }
+    err = sb.ActualizarBitmapBloque(archivo, indiceBloqueUsuarios, true)
+    if err != nil {
+        return fmt.Errorf("error actualizando el bitmap de bloques para /users.txt: %w", err)
+    }
+
+    sb.ActualizarSuperblockDespuesAsignacionBloque()
+
+    // 8. Mostrar estado del sistema de archivos
+    fmt.Println("Bloques")
+    sb.ImprimirBloques(archivo.Name())
+
+    // 9. Mostrar las entradas de journal usando los nuevos métodos
+    fmt.Println("Entradas del Journal:")
+    entradas, err := EncontrarEntradasJournalValidas(archivo, inicioJournaling, ENTRADAS_JOURNAL)
+    if err != nil {
+        fmt.Printf("Error leyendo entradas de journal: %v\n", err)
+    } else {
+        for i, entrada := range entradas {
+            fmt.Printf("-- Entrada %d --\n", i)
+            entrada.Imprimir()
+        }
+    }
+
+    fmt.Println("Sistema de archivos EXT3 inicializado correctamente con journaling")
+    return nil
 }

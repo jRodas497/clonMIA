@@ -18,6 +18,7 @@ import (
 type MKFS struct {
 	id   string // ID disco
 	tipo string // Formato
+	fs   string // Tipo de sistema de archivos
 }
 
 func ParserMkfs(tokens []string) (string, error) {
@@ -26,7 +27,7 @@ func ParserMkfs(tokens []string) (string, error) {
 	cmd := &MKFS{}
 
 	argumentos := strings.Join(tokens, " ")
-	re := regexp.MustCompile(`-id=[^\s]+|-type=[^\s]+`)
+	re := regexp.MustCompile(`-id=[^\s]+|-type=[^\s]+|-fs=[^\s]+`)
 	coincidencias := re.FindAllString(argumentos, -1)
 
 	for _, coincidencia := range coincidencias {
@@ -50,6 +51,11 @@ func ParserMkfs(tokens []string) (string, error) {
 				return "", errors.New("el tipo debe ser full")
 			}
 			cmd.tipo = valor
+		case "-fs":
+			if valor != "2fs" && valor != "3fs" {
+				return "", errors.New("el sistema de archivos debe ser 2fs o 3fs")
+			}
+			cmd.fs = valor
 		default:
 			return "", fmt.Errorf("parametro desconocido: %s", clave)
 		}
@@ -61,6 +67,10 @@ func ParserMkfs(tokens []string) (string, error) {
 
 	if cmd.tipo == "" {
 		cmd.tipo = "full"
+	}
+
+	if cmd.fs == "" {
+		cmd.fs = "2fs"
 	}
 
 	err := comandoMkfs(cmd, &bufferSalida)
@@ -94,7 +104,7 @@ func comandoMkfs(mkfs *MKFS, bufferSalida *bytes.Buffer) error {
 	particionMontada.Imprimir()
 
 	// Calcular el valor de n
-	n := calcularN(particionMontada)
+	n := calcularN(particionMontada, mkfs.fs)
 	fmt.Println("\nValor de n:", n)
 
 	// Crear el superblock
@@ -110,7 +120,13 @@ func comandoMkfs(mkfs *MKFS, bufferSalida *bytes.Buffer) error {
 	fmt.Fprintln(bufferSalida, "Bitmaps generados correctamente.")
 
 	// Archivo users.txt
-	err = superBloque.CrearArchivoUsuarios(archivo)
+
+	if mkfs.fs == "3fs" {
+		err = superBloque.CrearArchivoUsuariosExt3(archivo, int64(particionMontada.Part_start+int32(binary.Size(Estructuras.SuperBlock{}))))
+	} else {
+		err = superBloque.CrearArchivoUsuarios(archivo)
+	}
+	
 	if err != nil {
 		return fmt.Errorf("error generando el archivo users.txt: %v", err)
 	}
@@ -127,27 +143,43 @@ func comandoMkfs(mkfs *MKFS, bufferSalida *bytes.Buffer) error {
 	return nil
 }
 
-func calcularN(particion *Estructuras.Particion) int32 {
+func calcularN(particion *Estructuras.Particion, fs string) int32 {
 	numerador := int(particion.Part_size) - binary.Size(Estructuras.SuperBlock{})
-	denominador := 4 + binary.Size(Estructuras.INodo{}) + 3*binary.Size(Estructuras.FileBlock{}) // No importa que bloque poner, ya que todos tienen la misma dimension
-	n := math.Floor(float64(numerador) / float64(denominador))
+	baseDenominador := 4 + binary.Size(Estructuras.INodo{}) + 3*binary.Size(Estructuras.FileBlock{}) 
+	temp := 0
+	if fs == "3fs" {
+		temp = binary.Size(Estructuras.Journal{})
+	}
+	denominador := baseDenominador + temp
+	n := math.Floor(float64(numerador) / float64(denominador+temp))
 
 	return int32(n)
 }
 
 // Calcular punteros de las estructuras
-func crearSuperBlock(particion *Estructuras.Particion, n int32) *Estructuras.SuperBlock {
-	// Bitmaps
-	bm_inicio_inodo := particion.Part_start + int32(binary.Size(Estructuras.SuperBlock{}))
-	bm_inicio_bloque := bm_inicio_inodo + n // n indica la cantidad de inodos, solo la cantidad para ser representada en un bitmap
-	// Inodos
-	inicio_inodo := bm_inicio_bloque + (3 * n) // 3*n indica la cantidad de bloques, se multiplica por 3 porque se tienen 3 tipos de bloques
-	// Bloques
-	inicio_bloque := inicio_inodo + (int32(binary.Size(Estructuras.INodo{})) * n) // n indica la cantidad de inodos, solo que aqui indica la cantidad de estructuras INodo
+func crearSuperBlock(particion *Estructuras.Particion, n int32, fs string) *Estructuras.SuperBlock {
+	InicioJournal, InicioBMInodo, InicioBMBloque, InicioInodo, InicioBloque := calcularInicioPosiciones(particion, fs, n)
+
+	fmt.Println("\nInicio del SuperBlock:", particion.Part_start)
+	fmt.Println("\nFin del SuperBlock:", particion.Part_start+int32(binary.Size(Estructuras.SuperBlock{})))
+	fmt.Println("\nInicio del Journal:", InicioJournal)
+	fmt.Println("\nFin del Journal:", InicioJournal+int32(binary.Size(Estructuras.Journal{})))
+	fmt.Println("\nInicio del Bitmap de Inodos:", InicioBMInodo)
+	fmt.Println("\nFin del Bitmap de Inodos:", InicioBMInodo+n)
+	fmt.Println("\nInicio del Bitmap de Bloques:", InicioBMBloque)
+	fmt.Println("\nFin del Bitmap de Bloques:", InicioBMBloque+(3*n))
+	fmt.Println("\nInicio de Inodos:", InicioInodo)
+
+	var fsType int32
+	if fs == "3fs" {
+		fsType = 3
+	} else {
+		fsType = 2
+	}
 
 	// Nuevo superbloque
 	superBloque := &Estructuras.SuperBlock{
-		S_filesystem_type:   2,
+		S_filesystem_type:   fsType,
 		S_inodes_count:      0,
 		S_blocks_count:      0,
 		S_free_inodes_count: int32(n),
@@ -158,12 +190,33 @@ func crearSuperBlock(particion *Estructuras.Particion, n int32) *Estructuras.Sup
 		S_magic:             0xEF53,
 		S_inode_size:        int32(binary.Size(Estructuras.INodo{})),
 		S_block_size:        int32(binary.Size(Estructuras.FileBlock{})),
-		S_first_ino:         inicio_inodo,
-		S_first_blo:         inicio_bloque,
-		S_bm_inode_start:    bm_inicio_inodo,
-		S_bm_block_start:    bm_inicio_bloque,
-		S_inode_start:       inicio_inodo,
-		S_block_start:       inicio_bloque,
+		S_first_ino:         InicioInodo,
+		S_first_blo:         InicioBloque,
+		S_bm_inode_start:    InicioBMInodo,
+		S_bm_block_start:    InicioBMBloque,
+		S_inode_start:       InicioInodo,
+		S_block_start:       InicioBloque,
 	}
 	return superBloque
+}
+
+func calcularInicioPosiciones(particion *Estructuras.Particion, fs string, n int32) (int32, int32, int32, int32, int32) {
+	tamSuperBlock := int32(binary.Size(Estructuras.SuperBlock{}))
+	tamJournal := int32(binary.Size(Estructuras.Journal{}))
+	tamInodo := int32(binary.Size(Estructuras.INodo{}))
+
+	InicioJournal := int32(0)
+	InicioBMInodo := particion.Part_start + tamSuperBlock
+	InicioBMBloque := InicioBMInodo + n
+	InicioInodo := InicioBMBloque + (3 * n)
+	InicioBloque := InicioInodo + (tamInodo * n)
+
+	if fs == "3fs" {
+		InicioJournal = particion.Part_start + tamSuperBlock
+		InicioBMInodo += InicioJournal + tamJournal * tamJournal
+		InicioBMBloque += InicioBMInodo + n
+		InicioInodo += InicioBMBloque + (3 * n)
+		InicioBloque += InicioInodo + (tamInodo * n)
+	}
+	return InicioJournal, InicioBMInodo, InicioBMBloque, InicioInodo, InicioBloque
 }

@@ -210,3 +210,44 @@ func limpiarTerminal() (string, error) {
 	}
 	return "Terminal limpiada correctamente", nil
 }
+
+
+/*
+COMANDOS QUE ESTÁN EN 202100106 Y NO EN TU P2:
+
+1. JOURNALING
+   - Comando: journaling
+   - Función: Muestra el historial de transacciones del sistema EXT3
+   - Sintaxis: journaling -id=vd1
+
+2. LSBLK  
+   - Comando: lsblk
+   - Función: Lista todas las particiones de un disco con información detallada
+   - Sintaxis: lsblk -path="/ruta/disco.mia"
+
+3. FDISK EXTENDIDO
+   - Parámetros adicionales que no tienes:
+     * -delete (Fast/Full) - Para eliminar particiones
+     * -add (positivo/negativo) - Para agregar/quitar espacio a particiones
+   - Tu fdisk actual solo crea particiones, no las modifica ni elimina
+
+4. COMANDOS DE SISTEMA DE ARCHIVOS AVANZADOS (mencionados en el enunciado):
+   - remove: Eliminar archivos/directorios
+   - edit: Editar contenido de archivos
+   - copy: Copiar archivos
+   - chown: Cambiar propietario de archivos
+
+5. COMANDOS EXT3 ESPECÍFICOS:
+   - Versiones de mkdir, mkfile que escriben al journal
+   - Comandos que registran operaciones en el sistema de journaling
+
+ESTRUCTURAS QUE FALTAN:
+- Journal struct con j_count y j_content
+- JournalInfo struct con i_operation, i_path, i_content, i_date
+- Soporte EXT3 en SuperBloque (S_filesystem_type = 3)
+
+FUNCIONALIDADES FALTANTES:
+- Sistema de journaling integrado en comandos existentes
+- Escritura automática al journal en operaciones de archivos
+- Lectura y visualización del historial de transacciones
+*/
