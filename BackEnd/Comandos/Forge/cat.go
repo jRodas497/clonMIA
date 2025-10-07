@@ -166,6 +166,7 @@ func directorioExiste(sb *Estructuras.SuperBlock, archivo *os.File, indiceInodo 
 	}
 
 	// No se encontro directorio/archivo
+	fmt.Printf("Directorio o archivo '%s' no encontrado en inodo %d\n", nombreDirectorio, indiceInodo)
 	return false, -1, nil
 }
 
@@ -229,4 +230,41 @@ func leerArchivoDesdeInodo(archivo *os.File, sb *Estructuras.SuperBlock, indiceI
 	}
 
 	return constructorContenido.String(), nil
+}
+
+// buscarInodoCarpeta busca el inodo de una carpeta dado su ruta
+func buscarInodoCarpeta(archivo *os.File, sb *Estructuras.SuperBlock, directoriosPadre []string) (int32, error) {
+    // Si no hay directorios padre, retornar el inodo raiz (directorio root)
+    if len(directoriosPadre) == 0 {
+        return 0, nil
+    }
+    
+    // Empezar busqueda en inodo raiz
+    indiceInodo := int32(0)
+
+    // Navegar por cada directorio en la ruta
+    for _, nombreDirectorio := range directoriosPadre {
+        encontrado, nuevoIndiceInodo, err := directorioExiste(sb, archivo, indiceInodo, nombreDirectorio)
+        if err != nil {
+            return -1, err
+        }
+        if !encontrado {
+            return -1, fmt.Errorf("directorio '%s' no encontrado", nombreDirectorio)
+        }
+        
+        // Verificar que efectivamente sea un directorio
+        inodo := &Estructuras.INodo{}
+        err = inodo.Decodificar(archivo, int64(sb.S_inode_start+(nuevoIndiceInodo*sb.S_inode_size)))
+        if err != nil {
+            return -1, fmt.Errorf("error al leer inodo %d: %v", nuevoIndiceInodo, err)
+        }
+        
+        if inodo.I_type[0] != '0' {
+            return -1, fmt.Errorf("'%s' no es un directorio", nombreDirectorio)
+        }
+        
+        indiceInodo = nuevoIndiceInodo
+    }
+
+    return indiceInodo, nil
 }

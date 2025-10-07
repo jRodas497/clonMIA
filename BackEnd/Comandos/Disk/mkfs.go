@@ -108,7 +108,7 @@ func comandoMkfs(mkfs *MKFS, bufferSalida *bytes.Buffer) error {
 	fmt.Println("\nValor de n:", n)
 
 	// Crear el superblock
-	superBloque := crearSuperBlock(particionMontada, n)
+	superBloque := crearSuperBlock(particionMontada, n, mkfs.fs)
 	fmt.Println("\nSuperBlock:")
 	superBloque.Imprimir()
 
@@ -148,10 +148,11 @@ func calcularN(particion *Estructuras.Particion, fs string) int32 {
 	baseDenominador := 4 + binary.Size(Estructuras.INodo{}) + 3*binary.Size(Estructuras.FileBlock{}) 
 	temp := 0
 	if fs == "3fs" {
-		temp = binary.Size(Estructuras.Journal{})
+		// Acá
+		temp = binary.Size(Estructuras.Journal{}) * Estructuras.ENTRADAS_JOURNAL
 	}
 	denominador := baseDenominador + temp
-	n := math.Floor(float64(numerador) / float64(denominador+temp))
+	n := math.Floor(float64(numerador) / float64(denominador))
 
 	return int32(n)
 }
@@ -201,22 +202,31 @@ func crearSuperBlock(particion *Estructuras.Particion, n int32, fs string) *Estr
 }
 
 func calcularInicioPosiciones(particion *Estructuras.Particion, fs string, n int32) (int32, int32, int32, int32, int32) {
-	tamSuperBlock := int32(binary.Size(Estructuras.SuperBlock{}))
-	tamJournal := int32(binary.Size(Estructuras.Journal{}))
-	tamInodo := int32(binary.Size(Estructuras.INodo{}))
+    tamSuperBlock := int32(binary.Size(Estructuras.SuperBlock{}))
+    tamJournal := int32(binary.Size(Estructuras.Journal{}))
+    tamInodo := int32(binary.Size(Estructuras.INodo{}))
 
-	InicioJournal := int32(0)
-	InicioBMInodo := particion.Part_start + tamSuperBlock
-	InicioBMBloque := InicioBMInodo + n
-	InicioInodo := InicioBMBloque + (3 * n)
-	InicioBloque := InicioInodo + (tamInodo * n)
+    var InicioJournal int32
+    var InicioBMInodo int32
+    var InicioBMBloque int32
+    var InicioInodo int32
+    var InicioBloque int32
 
-	if fs == "3fs" {
-		InicioJournal = particion.Part_start + tamSuperBlock
-		InicioBMInodo += InicioJournal + tamJournal * tamJournal
-		InicioBMBloque += InicioBMInodo + n
-		InicioInodo += InicioBMBloque + (3 * n)
-		InicioBloque += InicioInodo + (tamInodo * n)
-	}
+    if fs == "3fs" {
+        // Para EXT3 con journaling
+        InicioJournal = particion.Part_start + tamSuperBlock
+        InicioBMInodo = InicioJournal + (tamJournal * Estructuras.ENTRADAS_JOURNAL)
+        InicioBMBloque = InicioBMInodo + n
+        InicioInodo = InicioBMBloque + (3 * n)
+        InicioBloque = InicioInodo + (tamInodo * n)
+    } else {
+        // Para EXT2 sin journaling
+        InicioJournal = 0 // No se usa
+        InicioBMInodo = particion.Part_start + tamSuperBlock
+        InicioBMBloque = InicioBMInodo + n
+        InicioInodo = InicioBMBloque + (3 * n)
+        InicioBloque = InicioInodo + (tamInodo * n)
+    }
+	
 	return InicioJournal, InicioBMInodo, InicioBMBloque, InicioInodo, InicioBloque
 }

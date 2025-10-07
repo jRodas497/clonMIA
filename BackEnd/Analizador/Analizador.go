@@ -111,6 +111,10 @@ var mapaComandos = map[string]func([]string) (string, error){
 		resultado, err := Forge.ParserCat(argumentos)
 		return fmt.Sprintf("%v", resultado), err
 	},
+	"remove": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserRemove(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	}
 	"rep": func(argumentos []string) (string, error) {
 		resultado, err := Forge.ParserRep(argumentos)
 		return fmt.Sprintf("%v", resultado), err
