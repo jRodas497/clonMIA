@@ -116,21 +116,25 @@ func comandoMkdir(mkdir *MKDIR, bufferSalida *bytes.Buffer) error {
 }
 
 func crearDirectorio(rutaDirectorio string, crearPadres bool, sb *Estructuras.SuperBlock, archivo *os.File, particionMontada *Estructuras.Particion) error {
-	directoriosPadres, directorioDestino := Utils.ObtenerDirectoriosPadre(rutaDirectorio)
-
-	// Si el parametro -p esta habilitado crea directorios intermedios
-	//(crearPadres == true)
-	if crearPadres {
-		for _, directorioPadre := range directoriosPadres {
-			err := sb.CrearCarpeta(archivo, directoriosPadres, directorioPadre)
-			if err != nil {
-				return fmt.Errorf("error al crear el directorio padre '%s': %w", directorioPadre, err)
-			}
-		}
-	}
+    // Si el parámetro -p está habilitado, crear los directorios intermedios recursivamente
+    if crearPadres {
+        // Utilizamos `CrearCarpetaRecursivamente` para crear los directorios si no existen
+        err := sb.CrearCarpetaRecursivamente(archivo, rutaDirectorio, true)
+        if err != nil {
+            return fmt.Errorf("error al crear los directorios recursivamente: %w", err)
+        }
+    } else {
+        // Si no se habilita el parámetro -p, asegurarse de que los directorios padres existan
+        directoriosPadre, directorioDestino := Utils.ObtenerDirectoriosPadre(rutaDirectorio)
+        // / -> ["/"] -> usuarios : /usuarios
+        // Verificar que todos los directorios padres existen
+        err := verificarDirectoriosPadreExisten(sb, archivo, directoriosPadre)
+        if err != nil {
+            return err
+        }
 
 	// Crear el directorio final
-	err := sb.CrearCarpeta(archivo, directoriosPadres, directorioDestino)
+	err := sb.CrearCarpeta(archivo, directoriosPadres, directorioDestino, true)
 	if err != nil {
 		return fmt.Errorf("error al crear el directorio: %w", err)
 	}

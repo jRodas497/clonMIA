@@ -74,19 +74,25 @@ func (fb *FileBlock) Imprimir() {
 	fmt.Print(fb.ObtenerContenido())
 }
 
-// Agrega contenido al final de B_cont si hay espacio disponible
+// AgregarContenido debe asegurar que el resto del bloque esté limpio
 func (fb *FileBlock) AgregarContenido(contenido string) error {
-	espacioDisponible := fb.EspacioDisponible()
+    espacioDisponible := fb.EspacioDisponible()
+    if len(contenido) > espacioDisponible {
+        return fmt.Errorf("no hay suficiente espacio en el bloque para añadir %d bytes", len(contenido))
+    }
 
-	if len(contenido) > espacioDisponible {
-		return fmt.Errorf("no hay suficiente espacio para agregar el contenido, se requieren %d bytes pero solo hay %d bytes disponibles", len(contenido), espacioDisponible)
-	}
+    // Encontrar donde termina el contenido actual
+    espacioUsado := fb.EspacioUsado()
 
-	espacioUsado := fb.EspacioUsado()
+    // Copiar el nuevo contenido
+    copy(fb.B_contenido[espacioUsado:], contenido)
 
-	copy(fb.B_cont[espacioUsado:], contenido)
+    // IMPORTANTE: Limpiar el resto del bloque con bytes nulos
+    for i := espacioUsado + len(contenido); i < DimensionBloque; i++ {
+        fb.B_contenido[i] = 0
+    }
 
-	return nil
+    return nil
 }
 
 // Limpia el contenido de B_cont

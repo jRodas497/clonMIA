@@ -167,24 +167,24 @@ func modificarContenidoArchivo(archivo *os.File, sb *Estructuras.SuperBlock, ind
             }
         } else {
             // Manejar bloques adicionales usando bloques de apuntadores
-            indiceBloqueApuntador := inodo.I_block[len(inodo.I_block)-1]
-            if indiceBloqueApuntador == -1 {
+            indicePointerBlock := inodo.I_block[len(inodo.I_block)-1]
+            if indicePointerBlock == -1 {
                 // Asignar nuevo bloque de apuntadores si no existe
-                indiceBloqueApuntador, err = sb.AsignarNuevoBloque(archivo, inodo, len(inodo.I_block)-1)
+                indicePointerBlock, err = sb.AsignarNuevoBloque(archivo, inodo, len(inodo.I_block)-1)
                 if err != nil {
                     return fmt.Errorf("error asignando bloque de apuntadores: %v", err)
                 }
             }
 
             // Cargar bloque de apuntadores existente
-            bloqueApuntador := &Estructuras.PointerBlock{}
-            err := bloqueApuntador.Decodificar(archivo, int64(sb.S_block_start+(indiceBloqueApuntador*sb.S_block_size)))
+            pointerBlock := &Estructuras.PointerBlock{}
+            err := pointerBlock.Decodificar(archivo, int64(sb.S_block_start+(indicePointerBlock*sb.S_block_size)))
             if err != nil {
                 return fmt.Errorf("error decodificando bloque de apuntadores: %v", err)
             }
 
             // Encontrar posicion libre en el bloque de apuntadores
-            indiceLibre, err := bloqueApuntador.EncontrarApuntadorLibre()
+            indiceLibre, err := pointerBlock.BuscarApuntadorLibre()
             if err != nil {
                 return fmt.Errorf("sin apuntadores libres disponibles: %v", err)
             }
@@ -196,13 +196,13 @@ func modificarContenidoArchivo(archivo *os.File, sb *Estructuras.SuperBlock, ind
             }
 
             // Actualizar apuntador en el bloque de apuntadores
-            err = bloqueApuntador.EstablecerApuntador(indiceLibre, int64(nuevoIndiceBloques))
+            err = pointerBlock.EstablecerApuntador(indiceLibre, int64(nuevoIndiceBloques))
             if err != nil {
                 return fmt.Errorf("error actualizando apuntador: %v", err)
             }
 
             // Guardar bloque de apuntadores modificado
-            err = bloqueApuntador.Codificar(archivo, int64(sb.S_block_start+(indiceBloqueApuntador*sb.S_block_size)))
+            err = pointerBlock.Codificar(archivo, int64(sb.S_block_start+(indicePointerBlock*sb.S_block_size)))
             if err != nil {
                 return fmt.Errorf("error guardando bloque de apuntadores: %v", err)
             }

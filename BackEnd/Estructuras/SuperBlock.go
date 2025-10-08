@@ -125,7 +125,7 @@ func (sb *SuperBlock) CrearArchivoUsuarios(archivo *os.File) error {
 	}
 
 	// Escribir el inodo de users.txt (inodo 1)
-	err = Utils.EscribirAArchivo(archivo, int64(sb.S_inode_start+int32(binary.Size(inodoUsuarios))), inodoUsuarios)
+	err = inodoUsuarios.Codificar(archivo, int64(sb.S_inode_start + sb.S_inode_size))
 	if err != nil {
 		return fmt.Errorf("error al escribir el inodo de users.txt: %w", err)
 	}
@@ -325,6 +325,7 @@ func (sb *SuperBlock) BuscarSiguienteInodoLibre(archivo *os.File) (int32, error)
 	return -1, fmt.Errorf("no hay inodos disponibles")
 }
 
+// Acá | AssignNewBlock
 // Asigna un nuevo bloque al inodo en el indice especificado si es necesario
 func (sb *SuperBlock) AsignarNuevoBloque(archivo *os.File, inodo *INodo, indice int) (int32, error) {
 	fmt.Println("=== Iniciando la asignacion de un nuevo bloque ===")
@@ -390,6 +391,7 @@ func (sb *SuperBlock) AsignarNuevoInodo(archivo *os.File, inodo *INodo, indice i
 	inodo.I_block[indice] = nuevoIndiceInodo
 	fmt.Printf("Nuevo inodo asignado: %d en I_block[%d]\n", nuevoIndiceInodo, indice)
 
+	// Acá
 	// Actualizar el bitmap de inodos
 	err = sb.ActualizarBitmapInodo(archivo, nuevoIndiceInodo, true)
 	if err != nil {
@@ -593,4 +595,28 @@ func (sb *SuperBlock) CrearArchivoUsuariosExt3(archivo *os.File, inicioJournalin
 
     fmt.Println("Sistema de archivos EXT3 inicializado correctamente con journaling")
     return nil
+}
+
+// ActualizarSuperblockDespuesDesasignacionBloque actualiza el SuperBlock después de liberar un bloque
+func (sb *SuperBlock) ActualizarSuperblockDespuesDesasignacionBloque() {
+    // Decrementar el contador de bloques asignados
+    sb.S_blocks_count--
+
+    // Incrementar el contador de bloques libres
+    sb.S_free_blocks_count++
+
+    // Retroceder el puntero al primer bloque libre
+    sb.S_first_blo -= sb.S_block_size
+}
+
+// ActualizarSuperblockDespuesDesasignacionInodo actualiza el SuperBlock después de liberar un inodo
+func (sb *SuperBlock) ActualizarSuperblockDespuesDesasignacionInodo() {
+    // Decrementar el contador de inodos asignados
+    sb.S_inodes_count--
+
+    // Incrementar el contador de inodos libres
+    sb.S_free_inodes_count++
+
+    // Retroceder el puntero al primer inodo libre
+    sb.S_first_ino -= sb.S_inode_size
 }

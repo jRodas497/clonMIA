@@ -142,3 +142,67 @@ func (sb *SuperBlock) verificarInodoLibre(archivo *os.File, inicio int32, posici
 
 	return (valorByte & (1 << desplazamientoBit)) == 0, nil
 }
+
+// LiberarBloque libera un bloque específico, lo marca como disponible en el bitmap y borra su contenido
+func (sb *SuperBlock) LiberarBloque(archivo *os.File, indiceBloque int32) error {
+    // Calcular la posición del bloque en el archivo
+    offsetBloque := int64(sb.S_block_start + indiceBloque*sb.S_block_size)
+    
+    // Crear buffer de ceros para limpiar completamente el bloque
+    bufferCeros := make([]byte, sb.S_block_size)
+    
+    // Sobrescribir el contenido del bloque con ceros
+    _, err := archivo.WriteAt(bufferCeros, offsetBloque)
+    if err != nil {
+        return fmt.Errorf("error al borrar el contenido del bloque %d: %w", indiceBloque, err)
+    }
+
+    // Marcar el bloque como disponible en el bitmap correspondiente
+    err = sb.ActualizarBitmapBloque(archivo, indiceBloque, false)
+    if err != nil {
+        return fmt.Errorf("error al marcar como libre el bloque %d: %w", indiceBloque, err)
+    }
+    
+    // Incrementar contador de bloques libres en el superbloque
+    sb.ActualizarSuperblockDespuesDesasignacionBloque()
+    
+    return nil
+}
+
+// LiberarInodo libera un inodo específico, lo marca como disponible en el bitmap y reinicia sus metadatos
+func (sb *SuperBlock) LiberarInodo(archivo *os.File, indiceInodo int32) error {
+    // Instanciar estructura para manipular el inodo
+    inodo := &INodo{}
+    
+    // Calcular ubicación del inodo en el archivo
+    offsetInodo := int64(sb.S_inode_start + indiceInodo*sb.S_inode_size)
+    
+    // Cargar el inodo desde el disco para su limpieza
+    err := inodo.Decodificar(archivo, offsetInodo)
+    if err != nil {
+        return fmt.Errorf("error al cargar inodo %d para su liberación: %w", indiceInodo, err)
+    }
+    
+    // Reiniciar todos los metadatos del inodo a valores por defecto
+    inodo.I_size = 0                    // Tamaño del archivo a cero
+    inodo.I_type[0] = '0'              // Restablecer tipo de inodo
+    // Inicializar todos los bloques como no asignados
+    inodo.I_block = [15]int32{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
+
+    // Escribir el inodo limpio de vuelta al disco
+    err = inodo.Codificar(archivo, offsetInodo)
+    if err != nil {
+        return fmt.Errorf("error al escribir el inodo limpio %d: %w", indiceInodo, err)
+    }
+    
+    // Marcar el inodo como disponible en el bitmap de inodos
+    err = sb.ActualizarBitmapInodo(archivo, indiceInodo, false)
+    if err != nil {
+        return fmt.Errorf("error al marcar como libre el inodo %d: %w", indiceInodo, err)
+    }
+
+    // Incrementar contador de inodos libres en el superbloque
+    sb.ActualizarSuperblockDespuesDesasignacionInodo()
+
+    return nil
+}

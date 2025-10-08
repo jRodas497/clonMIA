@@ -130,26 +130,26 @@ func comandoMkfile(mkfile *MKFILE, bufferSalida *bytes.Buffer) error {
 	defer archivo.Close()
 
 	// Capturar mensajes importantes en buffer
-	fmt.Fprintln(bufferSalida, "----------------------- MKFILE -----------------------")
-	fmt.Fprintf(bufferSalida, "Creando archivo: %s\n", mkfile.ruta)
+    fmt.Fprintln(bufferSalida, "----------------------- MKFILE -----------------------")
+    fmt.Fprintf(bufferSalida, "Creando archivo: %s\n", mkfile.ruta)
 
-	// Obtener directorios y nombre del archivo
-	rutaDirectorio, _ := ObtenerDirectorioYArchivo(mkfile.ruta)
+    // Obtener directorios padre del archivo
+    directoriosPadre, _ := Utils.ObtenerDirectoriosPadre(mkfile.ruta)
 
-	// Verificar existencia del directorio (sin incluir archivo)
-	fmt.Fprintf(bufferSalida, "Verificando existencia del directorio: %s\n", rutaDirectorio)
-	existe, _, err := directorioExiste(superBloqueParticion, archivo, 0, rutaDirectorio) // Usar inodo raiz (0) para iniciar busqueda
-	if err != nil {
-		return fmt.Errorf("error al verificar directorio: %w", err)
-	}
-
-	// Si -r esta habilitado y directorio no existe, crear directorios intermedios
-	if mkfile.r && !existe {
-		err = crearDirectorio(rutaDirectorio, mkfile.r, superBloqueParticion, archivo, particionMontada)
-		if err != nil {
-			return fmt.Errorf("error al crear directorios intermedios: %w", err)
-		}
-	}
+    // Verificar si el directorio existe, y si -r está habilitado, crearlo recursivamente
+    if mkfile.r {
+        fmt.Fprintf(bufferSalida, "Creando directorios intermedios si es necesario: %s\n", strings.Join(directoriosPadre, "/"))
+        err = superBloqueParticion.CrearCarpetaRecursivamente(archivo, strings.Join(directoriosPadre, "/"), true)
+        if err != nil {
+            return fmt.Errorf("error al crear directorios intermedios: %w", err)
+        }
+    } else {
+        fmt.Fprintf(bufferSalida, "Verificando si el directorio '%s' existe...\n", strings.Join(directoriosPadre, "/"))
+        _, err := buscarInodoCarpeta(archivo, superBloqueParticion, directoriosPadre)
+        if err != nil {
+            return fmt.Errorf("el directorio '%s' no existe y no se ha especificado la opcion -r: %w", strings.Join(directoriosPadre, "/"), err)
+        }
+    }
 
 	err = crearArchivo(mkfile.ruta, mkfile.tamaño, mkfile.contenido, superBloqueParticion, archivo, particionMontada, bufferSalida)
 	if err != nil {
