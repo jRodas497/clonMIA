@@ -115,11 +115,54 @@ var mapaComandos = map[string]func([]string) (string, error){
 		resultado, err := Forge.ParserRemove(argumentos)
 		return fmt.Sprintf("%v", resultado), err
 	}
+	"unmount": func(argumentos []string) (string, error) {
+		resultado, err := Disk.ParserUnmount(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"edit": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserEdit(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"rename": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserRename(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"copy": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserCopy(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"move": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserMove(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"find": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserFind(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"chown": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserChown(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"chmod": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserChmod(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"journaling": func(argumentos []string) (string, error) {
+		resultado, err := Forge.ParserJournaling(argumentos)
+		return fmt.Sprintf("%v", resultado), err
+	},
+	"loss": func(args []string) (string, error) {
+		result, err := Forge.ParserLoss(args)
+		return fmt.Sprintf("%v", result), err
+	},
+	"recovery": func(args []string) (string, error) {
+		result, err := Forge.ParserRecovery(args)
+		return fmt.Sprintf("%v", result), err
+	},
 	"rep": func(argumentos []string) (string, error) {
 		resultado, err := Forge.ParserRep(argumentos)
 		return fmt.Sprintf("%v", resultado), err
 	},
-
 	"help": mostrarAyuda,
 }
 
