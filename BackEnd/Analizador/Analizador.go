@@ -168,7 +168,7 @@ var mapaComandos = map[string]func([]string) (string, error){
 
 // Muestra informacion de ayuda sobre comandos disponibles
 func mostrarAyuda(argumentos []string) (string, error) {
-	mensajeAyuda := `
+    mensajeAyuda := `
 Lista de comandos disponibles en el sistema:
 
 GESTION DE DISCOS:
@@ -184,7 +184,11 @@ GESTION DE DISCOS:
 - mount: Monta una particion en el sistema
   Sintaxis: mount -path="/ruta/archivo.mia" -name="Particion1"
 
+- unmount: Desmonta una particion del sistema
+  Sintaxis: unmount -id=vd1
+
 - mounted: Lista las particiones montadas
+  Sintaxis: mounted
 
 - mkfs: Aplica formato a una particion
   Sintaxis: mkfs -id=vd1 -type=full
@@ -211,19 +215,54 @@ ADMINISTRACION DE USUARIOS:
 - chgrp: Modifica el grupo de un usuario
   Sintaxis: chgrp -user=usuario1 -grp=usuarios
 
-MANEJO DE ARCHIVOS:
+MANEJO DE ARCHIVOS Y DIRECTORIOS:
 - mkdir: Genera un directorio
-  Sintaxis: mkdir [parametros]
+  Sintaxis: mkdir -path="/home/carpeta" -p
 
 - mkfile: Crea un nuevo archivo
-  Sintaxis: mkfile [parametros]
+  Sintaxis: mkfile -path="/home/archivo.txt" -size=100 -cont="contenido"
 
 - cat: Muestra el contenido de archivos
-  Sintaxis: cat [parametros]
+  Sintaxis: cat -file="/home/archivo.txt"
 
-HERRAMIENTAS ADICIONALES:
+- remove: Elimina archivos o directorios
+  Sintaxis: remove -path="/home/archivo.txt"
+
+- edit: Modifica el contenido de un archivo
+  Sintaxis: edit -path="/home/archivo.txt" -cont="nuevo contenido"
+
+- rename: Cambia el nombre de archivos o directorios
+  Sintaxis: rename -path="/home/archivo.txt" -name="nuevo_nombre.txt"
+
+- copy: Copia archivos o directorios
+  Sintaxis: copy -path="/home/origen.txt" -dest="/home/destino.txt"
+
+- move: Mueve archivos o directorios
+  Sintaxis: move -path="/home/archivo.txt" -dest="/home/nueva_ubicacion/"
+
+- find: Busca archivos y directorios
+  Sintaxis: find -path="/home" -name="archivo.txt"
+
+PERMISOS Y PROPIEDADES:
+- chown: Cambia el propietario de archivos/directorios
+  Sintaxis: chown -path="/home/archivo.txt" -user=usuario1 -r
+
+- chmod: Modifica permisos de archivos/directorios
+  Sintaxis: chmod -path="/home/archivo.txt" -ugo=755 -r
+
+SISTEMA EXT3 Y RECUPERACION:
+- journaling: Muestra el historial de transacciones EXT3
+  Sintaxis: journaling -id=vd1
+
+- loss: Simula perdida de datos en el sistema
+  Sintaxis: loss -id=vd1
+
+- recovery: Recupera el sistema usando journaling
+  Sintaxis: recovery -id=vd1
+
+REPORTES Y HERRAMIENTAS:
 - rep: Produce reportes del sistema
-  Sintaxis: rep -id=vd1 -path="/ruta/archivo.mia" -name=mbr
+  Sintaxis: rep -id=vd1 -path="/ruta/reporte.png" -name=mbr
 
 - clear: Limpia la pantalla de la terminal
 
@@ -231,10 +270,26 @@ HERRAMIENTAS ADICIONALES:
 
 - help: Presenta esta informacion de ayuda
 
+PARAMETROS COMUNES:
+- -path: Ruta del archivo o directorio
+- -id: Identificador de particion montada
+- -r: Aplicar recursivamente
+- -p: Crear directorios padre si no existen
+- -size: Tamaño en bytes
+- -unit: Unidad (B, K, M)
+- -user: Nombre de usuario
+- -pass: Contraseña
+- -grp: Nombre de grupo
+- -name: Nombre del elemento
+- -cont: Contenido del archivo
+- -dest: Destino para operaciones de copia/movimiento
+- -ugo: Permisos en formato UGO (ej: 755)
+
 `
-	print(mensajeAyuda)
-	return mensajeAyuda, nil
+    return mensajeAyuda, nil
 }
+
+// ...existing code...
 
 // Limpia el contenido de la terminal segun el sistema operativo
 func limpiarTerminal() (string, error) {
