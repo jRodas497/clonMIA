@@ -1,6 +1,6 @@
 # Backend Dockerfile (multi-stage)
 # Build the Go binary
-FROM golang:1.20-alpine AS builder
+FROM golang:1.23.1-alpine AS builder
 
 ENV CGO_ENABLED=0
 WORKDIR /src
