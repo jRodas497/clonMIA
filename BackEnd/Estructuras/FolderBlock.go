@@ -46,3 +46,34 @@ func (bc *FolderBlock) Imprimir() {
 		fmt.Printf("  Inodo: %d\n", contenido.B_inodo)
 	}
 }
+
+// NuevoBloqueDirectorio crea un bloque de carpeta inicial con entradas dadas
+func NuevoBloqueDirectorio(selfInodo int32, parentInodo int32, entradas map[string]int32) *FolderBlock {
+	fb := &FolderBlock{}
+	// Inicializar con entradas vacías
+	for i := range fb.B_cont {
+		fb.B_cont[i].B_name = [12]byte{}
+		fb.B_cont[i].B_inodo = -1
+	}
+
+	// '.'
+	copy(fb.B_cont[0].B_name[:], ".")
+	fb.B_cont[0].B_inodo = selfInodo
+
+	// '..'
+	copy(fb.B_cont[1].B_name[:], "..")
+	fb.B_cont[1].B_inodo = parentInodo
+
+	// Rellenar con entradas adicionales hasta 2 más
+	idx := 2
+	for nombre, inodo := range entradas {
+		if idx >= len(fb.B_cont) {
+			break
+		}
+		copy(fb.B_cont[idx].B_name[:], nombre)
+		fb.B_cont[idx].B_inodo = inodo
+		idx++
+	}
+
+	return fb
+}

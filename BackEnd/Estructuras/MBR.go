@@ -64,7 +64,7 @@ func (mbr *MBR) GetPartitionByName(name string) (*Particion, int) {
         partitionName := strings.Trim(string(partition.Part_name[:]), "\x00 ")
         inputName := strings.Trim(name, "\x00 ")
         if strings.EqualFold(partitionName, inputName) {
-            return &partition, i
+            return &mbr.MbrPartitions[i], i
         }
     }
     return nil, -1
@@ -77,7 +77,7 @@ func (mbr *MBR) ObtenerParticionPorNombre(nombre string) (*Particion, int) {
 
         // Comparación insensible a mayúsculas/minúsculas
         if strings.EqualFold(nombreParticion, nombreEntrada) {
-            return &particion, i
+            return &mbr.MbrPartitions[i], i
         }
     }
     return nil, -1 // Partición no localizada
@@ -419,37 +419,6 @@ func (mbr *MBR) AplicarPeorAjuste(tamanoParticion int32) (*Particion, error) {
     particion.Part_start = int32(desplazamiento)
     particion.Part_size = tamanoParticion
     return particion, nil
-}
-
-func (mbr *MBR) CreatePartitionWithFit(partSize int32, partType, partName string) error {
-    availableSpace, err := mbr.CalculateAvailableSpace()
-    if err != nil {
-        return fmt.Errorf("error calculando el espacio disponible: %v", err)
-    }
-    if availableSpace < partSize {
-        return fmt.Errorf("no hay suficiente espacio en el disco para la nueva partición")
-    }
-    partition, err := mbr.ApplyFit(partSize)
-    if err != nil {
-        return fmt.Errorf("error al aplicar el ajuste: %v", err)
-    }
-    partition.Part_status[0] = '1' // Activar partición (1 = Activa)
-    partition.Part_size = partSize
-    if len(partType) > 0 {
-        partition.Part_type[0] = partType[0]
-    }
-
-    // Asignar el tipo de ajuste (fit) basado en el MBR
-    switch mbr.MbrDiskFit[0] {
-    case 'B', 'F', 'W':
-        partition.Part_fit[0] = mbr.MbrDiskFit[0]
-    default:
-        return fmt.Errorf("ajuste inválido en el MBR: %c. Debe ser BF (Best Fit), FF (First Fit) o WF (Worst Fit)", mbr.MbrDiskFit[0])
-    }
-    copy(partition.Part_name[:], partName)
-
-    fmt.Printf("Partición '%s' creada exitosamente con el ajuste '%c'.\n", partName, mbr.MbrDiskFit[0])
-    return nil
 }
 
 // Crea una partición aplicando el ajuste definido en el MBR (Best Fit, First Fit, Worst Fit)

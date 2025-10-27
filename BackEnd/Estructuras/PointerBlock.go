@@ -67,7 +67,7 @@ func (ba *PointerBlock) LiberarSiVacio(archivo *os.File, sb *SuperBlock, indiceB
         // Actualizar referencia en inodo padre
         if inodoPadre != nil && indiceApuntador >= 0 {
             inodoPadre.I_block[indiceApuntador] = -1
-            return inodoPadre.Codificar(archivo, sb.CalcularOffsetInodo(inodoPadre.I_uid))
+            return inodoPadre.Codificar(archivo, sb.CalcularDesplazamientoInodo(inodoPadre.I_uid))
         }
 
         // Actualizar contador en superbloque

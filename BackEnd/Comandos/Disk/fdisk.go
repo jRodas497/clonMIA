@@ -181,6 +181,8 @@ func procesarEliminarParticion(cmd *FDisk, bufferSalida *bytes.Buffer) (string, 
         return "", fmt.Errorf("error al eliminar la particion: %v", err)
     }
 
+    // No limpiar entradas del MBR aquí: la modificación ya se aplica directamente sobre la partición
+    // (mbr.ObtenerParticionPorNombre devuelve ahora un puntero a la entrada del MBR)
     // Actualizar el MBR en el archivo despues de la eliminacion
     err = mbr.Codificar(archivo)
     if err != nil {

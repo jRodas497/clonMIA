@@ -51,7 +51,8 @@ func (sb *SuperBlock) crearArchivoEnInodo( archivo *os.File, indiceInodo int32,
                     )
                 }
             }
-        } return fmt.Errorf("no se encontró la carpeta '%s'", buscar)
+        }
+        return fmt.Errorf("no se encontró la carpeta '%s'", buscar)
     }
 
     /* Estamos en el directorio destino — buscar hueco libre */
@@ -133,8 +134,8 @@ func (sb *SuperBlock) crearArchivoEnInodo( archivo *os.File, indiceInodo int32,
         return err
     }
     inodoArchivo.I_size = int32(len(datos))
-    inodoArchivo.ActualizarMtime()
-    inodoArchivo.ActualizarCtime()
+    inodoArchivo.ActualizarTiempoModificacion()
+    inodoArchivo.ActualizarTiempoPermisos()
     if err := inodoArchivo.Codificar(archivo, offsetInodo); err != nil {
         return err
     }
@@ -152,7 +153,7 @@ func (sb *SuperBlock) crearArchivoEnInodo( archivo *os.File, indiceInodo int32,
 
     /* 7. Metadatos directorio + superbloque */
     inodoDirectorio.I_size++
-    inodoDirectorio.ActualizarMtime()
+    inodoDirectorio.ActualizarTiempoModificacion()
     if err := inodoDirectorio.Codificar(archivo, int64(sb.S_inode_start+indiceInodo*sb.S_inode_size)); err != nil {
         return err
     }

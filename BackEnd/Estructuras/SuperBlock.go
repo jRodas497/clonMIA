@@ -362,19 +362,9 @@ func (sb *SuperBlock) AsignarNuevoBloque(archivo *os.File, inodo *INodo, indice 
 	return nuevoBloque, nil
 }
 
-// Asigna un nuevo inodo pero no lo inicializa
-func (sb *SuperBlock) AsignarNuevoInodo(archivo *os.File, inodo *INodo, indice int) (int32, error) {
+// Asigna un nuevo inodo y devuelve su índice (no inicializa su contenido)
+func (sb *SuperBlock) AsignarNuevoInodo(archivo *os.File) (int32, error) {
 	fmt.Println("=== Iniciando la asignacion de un nuevo inodo ===")
-
-	// Validar que el indice este dentro del rango de inodos validos
-	if indice < 0 || indice >= len(inodo.I_block) {
-		return -1, fmt.Errorf("indice de inodo fuera de rango: %d", indice)
-	}
-
-	// Verificar si ya hay un inodo asignado en ese indice
-	if inodo.I_block[indice] != -1 {
-		return -1, fmt.Errorf("el inodo en el indice %d ya esta asignado: %d", indice, inodo.I_block[indice])
-	}
 
 	// Encontrar un inodo libre
 	nuevoIndiceInodo, err := sb.BuscarSiguienteInodoLibre(archivo)
@@ -387,21 +377,9 @@ func (sb *SuperBlock) AsignarNuevoInodo(archivo *os.File, inodo *INodo, indice i
 		return -1, fmt.Errorf("no hay inodos libres disponibles")
 	}
 
-	// Asignar el nuevo inodo en el indice especificado
-	inodo.I_block[indice] = nuevoIndiceInodo
-	fmt.Printf("Nuevo inodo asignado: %d en I_block[%d]\n", nuevoIndiceInodo, indice)
-
-	// Acá
-	// Actualizar el bitmap de inodos
-	err = sb.ActualizarBitmapInodo(archivo, nuevoIndiceInodo, true)
-	if err != nil {
-		return -1, fmt.Errorf("error actualizando el bitmap de inodos: %w", err)
-	}
-
-	// Actualizar el estado del superblock
+	// Actualizar el estado del superblock (contadores/punteros)
 	sb.ActualizarSuperblockDespuesAsignacionInodo()
 
-	// Retornar el indice del inodo asignado
 	return nuevoIndiceInodo, nil
 }
 
@@ -489,8 +467,8 @@ func (sb *SuperBlock) CrearArchivoUsuariosExt3(archivo *os.File, inicioJournalin
 
     bloquesRaiz := [15]int32{indiceBloqueRaiz, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 
-    inodoRaiz := &Inodo{}
-    err = inodoRaiz.CrearInodo(
+	inodoRaiz := &INodo{}
+	err = inodoRaiz.CrearInodo(
         archivo,
         sb,
         '0',
@@ -502,14 +480,14 @@ func (sb *SuperBlock) CrearArchivoUsuariosExt3(archivo *os.File, inicioJournalin
         return fmt.Errorf("error al crear el inodo raíz: %w", err)
     }
 
-    bloqueRaiz := &BloqueCarpeta{
-        B_content: [4]ContenidoCarpeta{
-            {B_name: [12]byte{'.'}, B_inodo: 0},
-            {B_name: [12]byte{'.', '.'}, B_inodo: 0},
-            {B_name: [12]byte{'u', 's', 'e', 'r', 's', '.', 't', 'x', 't'}, B_inodo: sb.S_inodes_count},
-            {B_name: [12]byte{'-'}, B_inodo: -1},
-        },
-    }
+	bloqueRaiz := &FolderBlock{
+		B_cont: [4]FolderContent{
+			{B_name: [12]byte{'.'}, B_inodo: 0},
+			{B_name: [12]byte{'.', '.'}, B_inodo: 0},
+			{B_name: [12]byte{'u', 's', 'e', 'r', 's', '.', 't', 'x', 't'}, B_inodo: sb.S_inodes_count},
+			{B_name: [12]byte{'-'}, B_inodo: -1},
+		},
+	}
 
     err = sb.ActualizarBitmapBloque(archivo, indiceBloqueRaiz, true)
     if err != nil {
@@ -549,7 +527,7 @@ func (sb *SuperBlock) CrearArchivoUsuariosExt3(archivo *os.File, inicioJournalin
     }
     bloquesArchivo := [15]int32{indiceBloqueUsuarios, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 
-    inodoUsuarios := &Inodo{}
+	inodoUsuarios := &INodo{}
     err = inodoUsuarios.CrearInodo(
         archivo,
         sb,
@@ -562,11 +540,11 @@ func (sb *SuperBlock) CrearArchivoUsuariosExt3(archivo *os.File, inicioJournalin
         return fmt.Errorf("error al crear el inodo de /users.txt: %w", err)
     }
 
-    bloqueUsuarios := &BloqueArchivo{
-        B_content: [64]byte{},
-    }
-    bloqueUsuarios.AgregarContenido(textoUsuarios)
-    err = bloqueUsuarios.Codificar(archivo, int64(sb.S_first_blo))
+	bloqueUsuarios := &FileBlock{
+		B_cont: [DimensionBloque]byte{},
+	}
+	bloqueUsuarios.AgregarContenido(textoUsuarios)
+	err = bloqueUsuarios.Codificar(archivo, int64(sb.S_first_blo))
     if err != nil {
         return fmt.Errorf("error serializando el bloque de /users.txt: %w", err)
     }

@@ -116,32 +116,41 @@ func comandoMkdir(mkdir *MKDIR, bufferSalida *bytes.Buffer) error {
 }
 
 func crearDirectorio(rutaDirectorio string, crearPadres bool, sb *Estructuras.SuperBlock, archivo *os.File, particionMontada *Estructuras.Particion) error {
-    // Si el parámetro -p está habilitado, crear los directorios intermedios recursivamente
-    if crearPadres {
-        // Utilizamos `CrearCarpetaRecursivamente` para crear los directorios si no existen
-        err := sb.CrearCarpetaRecursivamente(archivo, rutaDirectorio, true)
-        if err != nil {
-            return fmt.Errorf("error al crear los directorios recursivamente: %w", err)
-        }
-    } else {
-        // Si no se habilita el parámetro -p, asegurarse de que los directorios padres existan
-        directoriosPadre, directorioDestino := Utils.ObtenerDirectoriosPadre(rutaDirectorio)
-        // / -> ["/"] -> usuarios : /usuarios
-        // Verificar que todos los directorios padres existen
-        err := verificarDirectoriosPadreExisten(sb, archivo, directoriosPadre)
-        if err != nil {
-            return err
-        }
+	// Si el parámetro -p está habilitado, crear los directorios intermedios recursivamente
+	if crearPadres {
+		// Utilizamos `CrearCarpetaRecursivamente` para crear los directorios si no existen
+		if err := sb.CrearCarpetaRecursivamente(archivo, rutaDirectorio, true); err != nil {
+			return fmt.Errorf("error al crear los directorios recursivamente: %w", err)
+		}
+
+		// Serializar el superbloque en el archivo de particion abierto
+		if err := sb.Codificar(archivo, int64(particionMontada.Part_start)); err != nil {
+			return fmt.Errorf("error al serializar el superbloque: %w", err)
+		}
+
+		// Depuración
+		fmt.Println("\nInodos:")
+		sb.ImprimirInodos(archivo.Name())
+		fmt.Println("\nBloques:")
+		sb.ImprimirBloques(archivo.Name())
+
+		return nil
+	}
+
+	// Si no se habilita el parámetro -p, asegurarse de que los directorios padres existan
+	directoriosPadre, directorioDestino := Utils.ObtenerDirectoriosPadre(rutaDirectorio)
+	// Verificar que todos los directorios padres existen
+	if err := verifyParentDirectoriesExist(sb, archivo, directoriosPadre); err != nil {
+		return err
+	}
 
 	// Crear el directorio final
-	err := sb.CrearCarpeta(archivo, directoriosPadres, directorioDestino, true)
-	if err != nil {
+	if err := sb.CrearCarpeta(archivo, directoriosPadre, directorioDestino, true); err != nil {
 		return fmt.Errorf("error al crear el directorio: %w", err)
 	}
 
 	// Serializar el superbloque en el archivo de particion abierto
-	err = sb.Codificar(archivo, int64(particionMontada.Part_start))
-	if err != nil {
+	if err := sb.Codificar(archivo, int64(particionMontada.Part_start)); err != nil {
 		return fmt.Errorf("error al serializar el superbloque: %w", err)
 	}
 
@@ -151,5 +160,14 @@ func crearDirectorio(rutaDirectorio string, crearPadres bool, sb *Estructuras.Su
 	fmt.Println("\nBloques:")
 	sb.ImprimirBloques(archivo.Name())
 
+	return nil
+}
+
+// verifyParentDirectoriesExist verifica que cada directorio en la lista exista en la partición
+func verifyParentDirectoriesExist(sb *Estructuras.SuperBlock, archivo *os.File, directoriosPadre []string) error {
+	_, err := sb.BuscarInodoDirectorio(archivo, directoriosPadre)
+	if err != nil {
+		return err
+	}
 	return nil
 }

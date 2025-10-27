@@ -68,15 +68,16 @@ func (p *Particion) Eliminar(tipoEliminacion string, archivo *os.File, esExtendi
             return fmt.Errorf("error al eliminar las particiones lógicas dentro de la partición extendida: %v", err)
         }
     }
-    p.Part_start = -1
-    p.Part_size = -1
-    p.Part_name = [16]byte{}
     if tipoEliminacion == "full" {
         err := p.Sobrescribir(archivo)
         if err != nil {
             return fmt.Errorf("error al sobrescribir la partición: %v", err)
         }
     }
+
+    p.Part_start = -1
+    p.Part_size = -1
+    p.Part_name = [16]byte{}
 
     fmt.Printf("La partición '%s' ha sido eliminada (%s).\n", strings.TrimSpace(string(p.Part_name[:])), tipoEliminacion)
     return nil

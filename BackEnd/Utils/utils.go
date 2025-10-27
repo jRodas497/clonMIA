@@ -100,7 +100,8 @@ func ObtenerNombresArchivos(ruta string) (string, string) {
 	directorio := filepath.Dir(ruta)
 	nombreBase := strings.TrimSuffix(filepath.Base(ruta), filepath.Ext(ruta))
 	nombreArchivoDot := filepath.Join(directorio, nombreBase+".dot")
-	imagenSalida := ruta
+	// Devolver la ruta de salida como .png junto al .dot
+	imagenSalida := filepath.Join(directorio, nombreBase+".png")
 	return nombreArchivoDot, imagenSalida
 }
 

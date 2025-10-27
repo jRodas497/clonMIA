@@ -6,6 +6,7 @@ import (
     "fmt"
     "os"
     "regexp"
+    "strconv"
     "strings"
 
     Estructuras "backend/Estructuras"
@@ -187,9 +188,14 @@ func validarPermisosChown(archivo *os.File, sb *Estructuras.SuperBlock, indiceIn
         return false
     }
 
-    // Comparar el propietario actual con el usuario logueado
-    propietarioActual := strings.Trim(string(inodo.I_uid[:]), "\x00 ")
-    return propietarioActual == Global.UsuarioActual.Nombre
+    // Comparar el UID numérico del inodo con el ID numérico del usuario logueado
+    uidInodo := inodo.I_uid
+    idUsuarioStr := Global.UsuarioActual.Id
+    idUsuarioInt, err := strconv.Atoi(idUsuarioStr)
+    if err != nil {
+        return false
+    }
+    return uidInodo == int32(idUsuarioInt)
 }
 
 // cambiarPropietarioElemento modifica el propietario de un elemento específico
@@ -201,12 +207,17 @@ func cambiarPropietarioElemento(archivo *os.File, sb *Estructuras.SuperBlock, in
         return fmt.Errorf("error al cargar inodo: %w", err)
     }
 
-    // Registrar propietario anterior
-    propietarioAnterior := strings.Trim(string(inodo.I_uid[:]), "\x00 ")
+    // Registrar propietario anterior (mostrar UID numérico)
+    propietarioAnterior := fmt.Sprintf("%d", inodo.I_uid)
     fmt.Fprintf(bufferSalida, "Cambiando propietario de '%s': %s -> %s\n", rutaElemento, propietarioAnterior, nuevoPropietario)
 
-    // Establecer nuevo propietario
-    copy(inodo.I_uid[:], nuevoPropietario)
+    // Obtener el ID numérico del nuevo propietario
+    nuevoId, err := obtenerIdUsuarioPorNombre(sb, archivo, nuevoPropietario)
+    if err != nil {
+        return fmt.Errorf("no se encontró el usuario '%s': %w", nuevoPropietario, err)
+    }
+    // Establecer nuevo propietario (UID numérico)
+    inodo.I_uid = nuevoId
 
     // Almacenar cambios en el inodo
     offsetInodo := int64(sb.S_inode_start + indiceInodo*sb.S_inode_size)
@@ -294,4 +305,33 @@ func validarPermisosLecturaChown(archivo *os.File, sb *Estructuras.SuperBlock, i
     // Evaluar permisos según el owner y group
     permisos := string(inodo.I_perm[:])
     return strings.Contains(permisos, "6") || strings.Contains(permisos, "4")
+}
+
+// obtenerIdUsuarioPorNombre busca el ID numérico de un usuario por su nombre en users.txt
+func obtenerIdUsuarioPorNombre(sb *Estructuras.SuperBlock, archivo *os.File, nombre string) (int32, error) {
+    // Usar directorioExiste para localizar users.txt (inodo 1 normalmente)
+    encontrado, indiceInodoUsers, err := directorioExiste(sb, archivo, 0, "users.txt")
+    if err != nil || !encontrado {
+        return -1, fmt.Errorf("users.txt no encontrado: %w", err)
+    }
+
+    contenidoUsers, err := leerArchivoDesdeInodo(archivo, sb, indiceInodoUsers)
+    if err != nil {
+        return -1, fmt.Errorf("error leyendo users.txt: %w", err)
+    }
+
+    lineas := strings.Split(contenidoUsers, "\n")
+    for _, linea := range lineas {
+        campos := strings.Split(linea, ",")
+        if len(campos) >= 4 && campos[1] == "U" {
+            if strings.TrimSpace(campos[3]) == nombre {
+                id, err := strconv.Atoi(campos[0])
+                if err != nil {
+                    continue
+                }
+                return int32(id), nil
+            }
+        }
+    }
+    return -1, fmt.Errorf("usuario '%s' no encontrado", nombre)
 }

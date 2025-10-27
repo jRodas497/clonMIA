@@ -84,7 +84,7 @@ func (sb *SuperBlock) crearCarpetaEnInodo(archivo *os.File, indiceInodo int32, d
                     break
                 }
 
-                directorioPadre, err := Utils.PrimeroEnLista(directoriosPadre)
+                directorioPadre, err := Utils.Primero(directoriosPadre)
                 if err != nil {
                     return err
                 }
@@ -374,7 +374,7 @@ func (sb *SuperBlock) eliminarCarpetaEnInodo(archivo *os.File, indiceInodo int32
         }
 
         // 6.2 Procesar cada entrada en el bloque
-        for _, contenido := range bloqueDir.B_content {
+        for _, contenido := range bloqueDir.B_cont {
             // Saltar entradas vacías o especiales (. y ..)
             if contenido.B_inodo == -1 ||
                 string(contenido.B_name[:1]) == "." ||
@@ -534,7 +534,7 @@ func (sb *SuperBlock) EliminarCarpeta(archivo *os.File, directoriosPadre []strin
             }
 
             // Buscar la carpeta en este bloque
-            for _, contenido := range bloque.B_content {
+            for _, contenido := range bloque.B_cont {
                 nombreContenido := strings.Trim(string(contenido.B_name[:]), "\x00 ")
 
                 if contenido.B_inodo != -1 && strings.EqualFold(nombreContenido, nombreDir) {
@@ -594,7 +594,7 @@ func (sb *SuperBlock) eliminarCarpetaDelDirectorio(archivo *os.File, indiceInodo
         }
 
         // Buscar la entrada específica en el directorio
-        for i, contenido := range bloque.B_content {
+        for i, contenido := range bloque.B_cont {
             nombreContenido := strings.Trim(string(contenido.B_name[:]), "\x00 ")
 
             if contenido.B_inodo != -1 && strings.EqualFold(nombreContenido, nombreCarpeta) {
@@ -614,7 +614,7 @@ func (sb *SuperBlock) eliminarCarpetaDelDirectorio(archivo *os.File, indiceInodo
                 }
 
                 // Limpiar la entrada en el directorio padre
-                bloque.B_content[i] = FolderContent{
+                bloque.B_cont[i] = FolderContent{
                     B_name:  [12]byte{'-'},
                     B_inodo: -1,
                 }

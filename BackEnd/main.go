@@ -6,9 +6,11 @@ import (
 	"strings"
 
 	Analizador "backend/Analizador"
+	usercmds "backend/Comandos/User"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	partitions "backend/partitions"
 )
 
 func main() {
@@ -63,6 +65,46 @@ func main() {
 		})
 	})
 
+	// Ruta para login desde el frontend
+	app.Post("/users/login", func(c *fiber.Ctx) error {
+		type LoginRequest struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+			ID       string `json:"id"`
+		}
+
+		var req LoginRequest
+		if err := c.BodyParser(&req); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "JSON invalido"})
+		}
+
+		// Construir comando tal como el analizador espera
+		loginCmd := fmt.Sprintf("login -user=%s -pass=%s -id=%s", req.Username, req.Password, req.ID)
+		res, err := usercmds.ParserLogin(strings.Split(loginCmd, " "))
+		if err != nil {
+			// devolver mensaje amigable
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"status": "error", "message": err.Error()})
+		}
+
+		// Respuesta de éxito: mandamos el texto que genera el parser
+		return c.JSON(fiber.Map{"status": "success", "message": res})
+	})
+
+	// Ruta para logout desde el frontend
+	app.Post("/users/logout", func(c *fiber.Ctx) error {
+		// Ejecutar el comando logout del analizador/usuario
+		res, err := usercmds.ParserLogout([]string{"logout"})
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": err.Error()})
+		}
+		// Además invocar cierre global de sesión si aplica
+		// Global.CerrarSesion() // ParserLogout already resets Global.UsuarioActual
+		return c.JSON(fiber.Map{"status": "success", "message": res})
+	})
+
 	// Server en puerto 3000
+	// register partition routes
+	partitions.RegisterRoutes(app)
+
 	log.Fatal(app.Listen(":3000"))
 }

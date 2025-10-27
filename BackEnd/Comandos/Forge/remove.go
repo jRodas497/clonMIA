@@ -56,7 +56,7 @@ func comandoRemove(cmdRemover *REMOVE, bufferSalida *bytes.Buffer) error {
     fmt.Fprint(bufferSalida, "====================== REMOVE ======================\n")
 
     // Verificar si hay un usuario logueado
-    if !Global.EstaSesionIniciada() {
+    if !Global.VerificarSesionActiva() {
         return fmt.Errorf("no hay un usuario logueado")
     }
 

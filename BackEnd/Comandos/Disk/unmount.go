@@ -73,13 +73,12 @@ func comandoUnmount(unmount *Unmount, outputBuffer *bytes.Buffer) error {
 		partitionID := strings.TrimSpace(string(partition.Part_id[:]))
 		if partitionID == unmount.id {
 			// Desmontar la partición: Cambiar el valor del correlativo a 0
-			err = partition.ParticionMontada(0, "")
+			err = partition.MontarParticion(0, "")
 			if err != nil {
 				return fmt.Errorf("error desmontando la partición: %v", err)
 			}
 
 			// Actualizar el MBR en el archivo después del desmontaje
-
 			// _, err = file.Seek(0, 0)
    			// if err != nil {
        		// 	return fmt.Errorf("error al posicionarse en el archivo: %v", err)

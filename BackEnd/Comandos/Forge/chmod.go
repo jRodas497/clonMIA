@@ -254,7 +254,12 @@ func esElementoDelUsuarioActual(archivo *os.File, sb *Estructuras.SuperBlock, in
         return false
     }
 
-    // Comparar el propietario del elemento con el usuario actual
-    propietario := strings.Trim(string(inodo.I_uid[:]), "\x00 ")
-    return propietario == Global.UsuarioActual.Nombre
+    // Comparar el UID del inodo con el ID del usuario actual (UID numeric)
+    uidInodo := inodo.I_uid
+    idUsuarioStr := Global.UsuarioActual.Id
+    idUsuarioInt, err := strconv.Atoi(idUsuarioStr)
+    if err != nil {
+        return false
+    }
+    return uidInodo == int32(idUsuarioInt)
 }

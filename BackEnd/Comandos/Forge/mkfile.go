@@ -182,7 +182,7 @@ func crearArchivo(rutaArchivo string, dimension int, contenido string, sb *Estru
 	fmt.Fprintf(bufferSalida, "Contenido generado: %v\n", fragmentos)
 
 	// Crear archivo en sistema de archivos
-	err := sb.CrearArchivo(archivo, directoriosPadre, directorioDestino, dimension, fragmentos)
+	err := sb.CrearArchivo(archivo, directoriosPadre, directorioDestino, dimension, fragmentos, false)
 	if err != nil {
 		return fmt.Errorf("error al crear el archivo: %w", err)
 	}

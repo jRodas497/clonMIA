@@ -966,7 +966,7 @@ func (inodo *INodo) LeerDatos(archivo *os.File, sb *SuperBlock) ([]byte, error) 
         }
 
         // Añadir los bytes al resultado
-        resultado = append(resultado, bloqueArchivo.B_contenido[:bytesDeEsteBloque]...)
+        resultado = append(resultado, bloqueArchivo.B_cont[:bytesDeEsteBloque]...)
         bytesALeer -= bytesDeEsteBloque
     }
 

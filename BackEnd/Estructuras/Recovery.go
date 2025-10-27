@@ -79,7 +79,7 @@ func reproducirJournal(archivo *os.File, sb *SuperBlock, inicioParticion int32) 
     inicioJournal := int64(inicioParticion) + int64(binary.Size(SuperBlock{}))
     fmt.Printf("[RECUPERACION]  Leyendo journal en posición=%d\n", inicioJournal)
 
-    entradas, err := BuscarEntradasJournalValidas(archivo, inicioJournal, ENTRADAS_JOURNAL)
+    entradas, err := EncontrarEntradasJournalValidas(archivo, inicioJournal, ENTRADAS_JOURNAL)
     if err != nil {
         return err
     }
@@ -110,7 +110,7 @@ func reproducirJournal(archivo *os.File, sb *SuperBlock, inicioParticion int32) 
             fmt.Printf("[RECUPERACION:%02d]   ✓ carpeta creada\n", indice+1)
 
         case "mkfile":
-            fragmentos := Utils.DividirCadenaEnFragmentos(datos)
+            fragmentos := Utils.DividirCadenaEnChunks(datos)
             if err := sb.CrearArchivo(archivo, directoriosPadre, nombreElemento,
                 len(datos), fragmentos, false); err != nil {
                 return fmt.Errorf("reproducir mkfile %s: %w", ruta, err)

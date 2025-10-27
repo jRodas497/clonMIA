@@ -114,7 +114,7 @@ var mapaComandos = map[string]func([]string) (string, error){
 	"remove": func(argumentos []string) (string, error) {
 		resultado, err := Forge.ParserRemove(argumentos)
 		return fmt.Sprintf("%v", resultado), err
-	}
+	},
 	"unmount": func(argumentos []string) (string, error) {
 		resultado, err := Disk.ParserUnmount(argumentos)
 		return fmt.Sprintf("%v", resultado), err

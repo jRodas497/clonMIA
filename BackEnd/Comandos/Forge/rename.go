@@ -111,10 +111,19 @@ func comandoRename(comandoRename *RENAME, bufferSalida *bytes.Buffer) error {
         }
     }
 
-    // Renombrar el archivo/carpeta usando la función `RenombrarEnBloqueCarpeta`
-    err = bloqueCarpeta.RenombrarEnBloqueCarpeta(nombreAntiguo, comandoRename.nombre)
-    if err != nil {
-        return fmt.Errorf("error al renombrar el archivo o carpeta: %v", err)
+    // Renombrar el archivo/carpeta: buscar entrada y reemplazar nombre
+    renombrado := false
+    for i, contenido := range bloqueCarpeta.B_cont {
+        nombre := strings.Trim(string(contenido.B_name[:]), "\x00 ")
+        if strings.EqualFold(nombre, nombreAntiguo) {
+            // Reemplazar el nombre en la entrada
+            copy(bloqueCarpeta.B_cont[i].B_name[:], comandoRename.nombre)
+            renombrado = true
+            break
+        }
+    }
+    if !renombrado {
+        return fmt.Errorf("archivo o carpeta '%s' no encontrado para renombrar", nombreAntiguo)
     }
 
     // Guardar el bloque modificado de nuevo en el archivo

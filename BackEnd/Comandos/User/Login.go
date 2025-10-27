@@ -28,10 +28,14 @@ func ParserLogin(tokens []string) (string, error) {
 	re := regexp.MustCompile(`-user=[^\s]+|-pass=[^\s]+|-id=[^\s]+`)
 	coincidencias := re.FindAllString(argumentos, -1)
 
+	// Validate tokens: ensure every token contains '=' and is one of the expected keys
 	for _, coincidencia := range coincidencias {
+		if !strings.Contains(coincidencia, "=") {
+			return "", fmt.Errorf("formato de parametro invalido, se esperaba clave=valor: %s", coincidencia)
+		}
 		clavValor := strings.SplitN(coincidencia, "=", 2)
-		if len(clavValor) != 2 {
-			return "", fmt.Errorf("formato de parametro invalido: %s", coincidencia)
+		if len(clavValor) != 2 || clavValor[1] == "" {
+			return "", fmt.Errorf("formato de parametro invalido o valor vacio para: %s", coincidencia)
 		}
 		clave, valor := strings.ToLower(clavValor[0]), clavValor[1]
 
@@ -71,6 +75,14 @@ func comandoLogin(login *LOGIN, bufferSalida *bytes.Buffer) error {
 	}
 
 	// Verificar que la particion este montada
+	// Mostrar particiones montadas (debug amigable)
+	if len(Global.ParticionesMontadas) > 0 {
+		fmt.Fprintln(bufferSalida, "Particiones montadas:")
+		for id, path := range Global.ParticionesMontadas {
+			fmt.Fprintf(bufferSalida, "  ID: %s -> %s\n", id, path)
+		}
+	}
+
 	_, ruta, err := Global.ObtenerParticionMontada(login.ID)
 	if err != nil {
 		return fmt.Errorf("no se puede encontrar la particion: %v", err)
