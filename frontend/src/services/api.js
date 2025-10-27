@@ -1,14 +1,46 @@
 // Pequeño wrapper para llamadas a los endpoints del backend
-const API_BASE = '' // usa el mismo host/origen desde el front (asume proxy o mismo dominio)
+// Usar la URL completa del backend para evitar problemas de origen en desarrollo.
+// En producción puedes dejarlo vacío para usar el mismo origen o configurar una variable de entorno.
+let API_BASE = ''
+if (typeof window !== 'undefined') {
+  const h = window.location.hostname || ''
+  // In dev we commonly run frontend on localhost or 127.0.0.1 — point API to backend
+  if (h === 'localhost' || h === '127.0.0.1') {
+    API_BASE = 'http://localhost:3000'
+  } else {
+    API_BASE = ''
+  }
+}
 
 async function postJson(path, body) {
-  const res = await fetch(API_BASE + path, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
-  return res.json()
+  let res
+  try {
+    res = await fetch(API_BASE + path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+  } catch (err) {
+    // network error or CORS blocked
+    throw new Error('Network error: ' + (err.message || err))
+  }
+
+  const text = await res.text()
+  // try parse JSON if any
+  let data
+  try {
+    data = text ? JSON.parse(text) : null
+  } catch (e) {
+    // not JSON
+    data = text
+  }
+
+  if (!res.ok) {
+    const msg = (data && data.message) || res.statusText || 'HTTP error'
+    throw new Error(msg)
+  }
+
+  return data
 }
 
 export async function login(username, password, id) {

@@ -26,7 +26,16 @@ export default function FileSystemViewer({ diskPath, partitionName, onClose }) {
     setError(null)
     try {
       const res = await api.listPath(diskPath, partitionName, path) // implement in services/api.js
-      setEntries(res.entries || [])
+      // If backend suggests autoHome (server user's home) and we're at root, navigate there automatically
+      if (res && res.autoHome && (path === '/' || path === '' || path === undefined)) {
+        const auto = res.autoHome
+        // request the entries for autoHome
+        const res2 = await api.listPath(diskPath, partitionName, auto)
+        setCurrentPath(auto)
+        setEntries(res2.entries || [])
+      } else {
+        setEntries(res.entries || [])
+      }
     } catch (err) {
       setError(err.message || 'No se pudo listar la ruta')
       setEntries([])

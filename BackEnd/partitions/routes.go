@@ -2,6 +2,10 @@ package partitions
 
 import (
     "github.com/gofiber/fiber/v2"
+    "os"
+    "path/filepath"
+    "strings"
+    "os/user"
 )
 
 // RegisterRoutes registers partition-related endpoints for testing and development.
@@ -33,13 +37,57 @@ func listHandler(c *fiber.Ctx) error {
     }
 
     // Simple stubbed content based on path
+    // If the client requests the host filesystem (local server FS), serve real OS entries
+    if req.DiskPath == "__hostfs" {
+        clean := filepath.Clean(path)
+        if !filepath.IsAbs(clean) {
+            clean = "/"
+        }
+
+        files, err := os.ReadDir(clean)
+        if err != nil {
+            return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "cannot read path", "detail": err.Error()})
+        }
+
+        entries := make([]fiber.Map, 0, len(files))
+        for _, fi := range files {
+            name := fi.Name()
+            info, _ := fi.Info()
+            if fi.IsDir() {
+                entries = append(entries, fiber.Map{"name": name, "type": "dir", "tipo": "carpeta", "extension": nil, "size": 0})
+            } else {
+                ext := strings.TrimPrefix(filepath.Ext(name), ".")
+                var extVal interface{} = nil
+                if ext != "" {
+                    extVal = ext
+                }
+                size := int64(0)
+                if info != nil {
+                    size = info.Size()
+                }
+                entries = append(entries, fiber.Map{"name": name, "type": "file", "tipo": "file", "extension": extVal, "size": size})
+            }
+        }
+
+        resp := fiber.Map{"path": clean, "entries": entries}
+        // If root requested, provide autoHome to let the frontend auto-navigate to user's home
+        if clean == "/" {
+            if u, err := user.Current(); err == nil {
+                resp["autoHome"] = u.HomeDir
+            }
+        }
+
+        return c.JSON(resp)
+    }
+
+    // Simple stubbed content based on path
     if path == "/" {
         return c.JSON(fiber.Map{
             "path": "/",
             "entries": []fiber.Map{
-                {"name": "home", "type": "dir"},
-                {"name": "etc", "type": "dir"},
-                {"name": "readme.txt", "type": "file"},
+                {"name": "home", "type": "dir", "tipo": "carpeta", "extension": nil, "size": 0},
+                {"name": "etc", "type": "dir", "tipo": "carpeta", "extension": nil, "size": 0},
+                {"name": "readme.txt", "type": "file", "tipo": "file", "extension": "txt", "size": 1024},
             },
         })
     }
@@ -48,8 +96,8 @@ func listHandler(c *fiber.Ctx) error {
     return c.JSON(fiber.Map{
         "path": path,
         "entries": []fiber.Map{
-            {"name": "file1.txt", "type": "file"},
-            {"name": "notes.md", "type": "file"},
+            {"name": "file1.txt", "type": "file", "tipo": "file", "extension": "txt", "size": 2048},
+            {"name": "notes.md", "type": "file", "tipo": "file", "extension": "md", "size": 512},
         },
     })
 }
@@ -68,12 +116,14 @@ func statHandler(c *fiber.Ctx) error {
 
     // stubbed metadata
     meta := fiber.Map{
-        "name":     "",
-        "path":     p,
-        "type":     "file",
-        "size":     1234,
-        "created":  "2025-10-26T00:00:00Z",
-        "modified": "2025-10-26T00:00:00Z",
+        "name":       "",
+        "path":       p,
+        "type":       "file",
+        "tipo":       "file",
+        "extension":  nil,
+        "size":       1234,
+        "created":    "2025-10-26T00:00:00Z",
+        "modified":   "2025-10-26T00:00:00Z",
         "permissions": "rw-r--r--",
     }
 
@@ -81,6 +131,8 @@ func statHandler(c *fiber.Ctx) error {
     if p == "/" {
         meta["name"] = "/"
         meta["type"] = "dir"
+        meta["tipo"] = "carpeta"
+        meta["extension"] = nil
     } else {
         // extract last segment
         segs := []rune(p)

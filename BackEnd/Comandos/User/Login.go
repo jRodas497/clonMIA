@@ -76,11 +76,9 @@ func comandoLogin(login *LOGIN, bufferSalida *bytes.Buffer) error {
 
 	// Verificar que la particion este montada
 	// Mostrar particiones montadas (debug amigable)
-	if len(Global.ParticionesMontadas) > 0 {
-		fmt.Fprintln(bufferSalida, "Particiones montadas:")
-		for id, path := range Global.ParticionesMontadas {
-			fmt.Fprintf(bufferSalida, "  ID: %s -> %s\n", id, path)
-		}
+	fmt.Fprintln(bufferSalida, "Particiones montadas:")
+	for id, path := range Global.ParticionesMontadas {
+		fmt.Fprintf(bufferSalida, "  ID: %s -> %s\n", id, path)
 	}
 
 	_, ruta, err := Global.ObtenerParticionMontada(login.ID)

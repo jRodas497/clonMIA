@@ -23,16 +23,25 @@ export default function Login({ onLogin, onClose, onLogout, session }) {
     try {
       const res = await api.login(username, password, id)
       // propagate session/result to parent
-      // save credentials locally so UI can remember them
-      localStorage.setItem('mia_username', username)
-      localStorage.setItem('mia_password', password)
-      localStorage.setItem('mia_id', id)
-      if (typeof onLogin === 'function') onLogin(res)
-      if (typeof onClose === 'function') onClose()
+      // Expect backend to return an object with status: 'success' on success
+      if (res && (res.status === 'success' || res.status === 'ok')) {
+        // save credentials locally so UI can remember them
+        localStorage.setItem('mia_username', username)
+        localStorage.setItem('mia_password', password)
+        localStorage.setItem('mia_id', id)
+        // propagate normalized session object to parent
+        if (typeof onLogin === 'function') onLogin({ username, id, raw: res })
+        if (typeof onClose === 'function') onClose()
+      } else {
+        // backend returned a non-successful payload (but HTTP 200). Show message and do not close the modal.
+        const msg = (res && res.message) || 'Credenciales inválidas'
+        setError(msg)
+      }
     } catch (err) {
       console.error('Login error:', err)
-      if (typeof onLogin === 'function') onLogin({ username })
-      if (typeof onClose === 'function') onClose()
+      // Network or HTTP error: show message and do NOT call onLogin/onClose
+      const msg = err && err.message ? err.message : 'Error conectando al servidor'
+      setError(msg)
     }
   }
 

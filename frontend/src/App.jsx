@@ -154,15 +154,11 @@ function App() {
       )}
 
       {view === 'explorer' && (
-        // If user hasn't selected a disk/partition yet, show the DiskList so they can pick one
+        {/* If user hasn't selected a disk/partition yet, show the host filesystem explorer (auto-populate to user's home).
+            Otherwise show the explorer for the selected disk/partition. */}
         (!selectedDisk) ? (
-          <Modal title="Seleccionar disco para explorador" onClose={() => setView('editor')}>
-            <DiskList onSelect={(diskPath, partitionName) => {
-              console.log('App: Disk selected for explorer', diskPath, partitionName)
-              setSelectedDisk({ diskPath, partitionName })
-              // keep view as explorer so the explorer modal replaces this modal
-              setView('explorer')
-            }} />
+          <Modal title="Explorador (Host)" onClose={() => setView('editor')}>
+            <FileSystemViewer diskPath={"__hostfs"} partitionName={""} />
           </Modal>
         ) : (
           <Modal title={`Explorador: ${selectedDisk.partitionName || ''}`} onClose={() => setView('editor')}>
