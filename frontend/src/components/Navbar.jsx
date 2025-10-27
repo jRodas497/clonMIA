@@ -28,6 +28,30 @@ export default function Navbar({ onOpenLogin, onNavigate, onExecute, onFileSelec
         </nav>
 
         <div className="flex items-center gap-3">
+          {/* show current user (username(id)) when session exists; fall back to localStorage if needed */}
+          {session && (
+            <div className="mr-4 flex items-center gap-3">
+              {/* Username (bold) and partition id as a small badge */}
+              <div className="text-base font-semibold text-gray-800">
+                {(() => {
+                  try {
+                    return session.username || (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('mia_username')) || ''
+                  } catch (e) {
+                    return ''
+                  }
+                })()}
+              </div>
+              <div className="text-sm font-medium text-white bg-indigo-600 px-2 py-0.5 rounded">
+                {(() => {
+                  try {
+                    return session.id || (typeof window !== 'undefined' && window.localStorage && localStorage.getItem('mia_id')) || ''
+                  } catch (e) {
+                    return ''
+                  }
+                })()}
+              </div>
+            </div>
+          )}
           {onExecute && (
             <button type="button" onClick={onExecute} className="px-4 py-2 rounded-md bg-btn text-white hover:opacity-90">Ejecutar</button>
           )}

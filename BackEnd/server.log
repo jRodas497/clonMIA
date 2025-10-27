@@ -1,0 +1,4332 @@
+nohup: ignoring input
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.52.9                   │ 
+ │               http://127.0.0.1:3000               │ 
+ │       (bound on host 0.0.0.0 and port 3000)       │ 
+ │                                                   │ 
+ │ Handlers ............. 6  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID ............ 151861 │ 
+ └───────────────────────────────────────────────────┘ 
+
+Entrada:  mounted
+
+Entrada:  #Calificacion Proyecto 2
+#2S 2025
+#Cambiar "ubuntu" -> por el usuario de su distribución de linux
+#Cambiar “89” -> por los ultimos dos digitos de su carnet
+#Cambiar “RUTA_CONTENIDO” -> por la ruta del archivo que tenga su Carnet
+
+
+#******* TEORIA DE PARTICIONES *******
+
+
+#CREANDO DISCO
+mkdisk -size=1 -unit=K -fit=FF -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia
+
+#CREACION DE PARTICIONES
+#100
+fdisk -type=P -unit=B -name=Part1 -size=100 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -fit=BF
+#100
+fdisk -type=P -unit=B -name=Part2 -size=100 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -fit=BF
+#100
+fdisk -type=P -unit=B -name=Part3 -size=100 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -fit=BF
+#559
+fdisk -type=P -unit=B -name=Part4 -size=559 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -fit=BF
+
+
+#ELIMINANDO PARTICIONES
+fdisk -delete=fast -name=Part1 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia
+fdisk -delete=fast -name=Part3 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia 
+
+
+#QUITANDO ESPACIO
+fdisk -add=-200 -size=10240 -unit=B -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -name=Part4
+
+
+#CREACION DE PARTICIONES
+#150
+fdisk -type=P -unit=B -name=Part5 -size=100 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -fit=BF
+#100
+fdisk -type=P -unit=B -name=Part6 -size=100 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia -fit=BF
+
+#MOUNT
+mount -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia /name=Part1
+
+#REPORTE
+rep -id=891A -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/diskB -name=disk
+
+
+#------------ SISTEMAS DE ARCHIVOS COMPLETOS ---------------
+
+
+#******* CREACION DE DISCO *******
+# 60M A
+mkdisk -size=60 -unit=M -fit=FF -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia
+
+
+#******* CREACION DE PARTICIONES *******
+#DISCO 1
+# 20M
+fdisk -type=P -unit=B -name=Part1 -size=20971520 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -fit=BF
+# 10M
+fdisk -type=P -unit=k -name=Part2 -size=10240 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -fit=BF
+# 10M
+fdisk -type=P -unit=M -name=Part3 -size=10 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -fit=BF
+# 10M
+fdisk -type=P -unit=B -name=Part4 -size=10485760 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -fit=BF
+
+
+#ELIMINANDO PARTICIONES
+fdisk -delete=fast -name=Part3 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia
+fdisk -delete=fast -name=Part4 -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia 
+
+
+#QUITANDO ESPACIO
+fdisk -add=-500 -size=10240 -unit=k -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -name=Part2
+
+
+#AGREGANDO ESPACIO 
+fdisk -add=500 -unit=k -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -name=Part2
+
+
+rep -id=891A -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/diskB -name=disk
+
+
+#******* MONTAR PARTICIONES *******
+#DISCO 1
+#891a -> 89 sus ultimos dos digitos
+mount -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -name=Part1
+#892a -> 89 sus ultimos dos digitos
+mount -path=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia -name=Part2
+
+
+#******* DESMONTAR PARTICION *******
+unmount -id=892A 
+
+
+#******* CREACION DE SISTEMA DE ARCHIVOS *******
+mkfs -type=full -id=891A -fs=3fs
+
+
+#******* LOGIN *******
+login -user=root -pass=123 -id=891A
+
+
+#******* CREACION DE CARPETAS *******
+
+
+#RECURSIVO
+mkdir -p -path=/calificacion/U2025/9noSemestre
+
+
+mkdir -p -path=/calificacion/U2025/6toSemestre/MIA
+mkfile -path=/calificacion/U2025/6toSemestre/MIA/lab.txt -size=5
+mkfile -path=/calificacion/U2025/6toSemestre/MIA/magis.txt -size=5
+
+
+mkdir -path=/calificacion/U2025/6toSemestre/ARQUI
+mkfile -path=/calificacion/U2025/6toSemestre/ARQUI/lab.txt -size=10
+mkfile -path=/calificacion/U2025/6toSemestre/ARQUI/magis.txt -size=10
+
+
+mkdir -path=/calificacion/U2025/6toSemestre/COMPI
+mkfile -path=/calificacion/U2025/6toSemestre/COMPI/lab.txt -size=30
+mkfile -path=/calificacion/U2025/6toSemestre/COMPI/magis.txt -size=30
+
+
+mkdir -path=/calificacion/TEST
+mkfile -path=/calificacion/TEST/carnet.txt -size=768
+mkfile -path=/calificacion/TEST/borrar.txt -size=768
+mkdir -path=/calificacion/TEST/BORRAME
+mkfile -path=/calificacion/TEST/cambiar_nombre.txt -size=768
+mkdir -path=/calificacion/COPY_TEST
+mkfile -path=/calificacion/COPY_TEST/moveme.txt -size=768
+mkfile -path=/calificacion/TEST/nombre.txt 
+mkdir -path=/calificacion/MOVE
+
+
+#******* REMOVE *******
+# Borrando archivo
+remove -path=/calificacion/TEST/borrar.txt
+
+
+# Borrando carpeta
+remove -path=/calificacion/TEST/BORRAME
+
+
+#******* EDIT *******
+edit -path=/calificacion/TEST/nombre.txt -contenido=/home/rodasjj/Calificacion_MIA/ResultadosP2/NAME.txt
+
+
+#******* RENAME *******
+rename -path=/calificacion/TEST/cambiar_nombre.txt -name=cambiado.txt
+
+
+#******* COPY *******
+copy -path=/calificacion/TEST -destino=/calificacion/COPY_TEST 
+
+
+#******* MOVE *******
+move -path=/calificacion/COPY_TEST/moveme.txt -destino=/calificacion/MOVE
+
+
+#******* FIND *******
+# Archivos
+find -path="/" -name="."
+
+
+#******* CHOWN *******
+# Error no existe usuario
+chown -path=/calificacion -usuario=user_no_existe
+
+
+#******* CHMOD *******
+chmod -path=/calificacion/TEST -ugo=777
+
+
+#******* LOGOUT *******
+logout
+
+
+#******* JOURNALING *******
+journaling -id=891A
+
+
+#******* LOSS *******
+loss -id=891A
+
+
+#******* RECOVERY *******
+recovery -id=891A
+
+
+═══ MASTER BOOT RECORD ═══
+Capacidad: 1024 bytes | Creado: 2025-10-27 00:49:36
+Firma: 1200635668 | Ajuste: F
+═══════════════════════════
+--------------------------------------------
+Detalles internos: dimension=100, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia, categoria=P, nombre=Part1
+Debug: Capacidad total=1024, Espacio usado=153
+Espacio disponible en el disco: 871
+Debug: Capacidad total=1024, Espacio usado=153
+Debug: Capacidad total=1024, Espacio usado=153
+Iniciando First Fit...
+Evaluando partición 0: Inicio -1, Tamaño -1, Estado 0
+Partición 0 es adecuada para First Fit: Inicio en 153, Tamaño 100
+Partición 'Part1' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=100, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia, categoria=P, nombre=Part2
+Debug: Capacidad total=1024, Espacio usado=253
+Espacio disponible en el disco: 771
+Debug: Capacidad total=1024, Espacio usado=253
+Debug: Capacidad total=1024, Espacio usado=253
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 100, Estado 1
+Evaluando partición 1: Inicio -1, Tamaño -1, Estado 0
+Partición 1 es adecuada para First Fit: Inicio en 253, Tamaño 100
+Partición 'Part2' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=100, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia, categoria=P, nombre=Part3
+Debug: Capacidad total=1024, Espacio usado=353
+Espacio disponible en el disco: 671
+Debug: Capacidad total=1024, Espacio usado=353
+Debug: Capacidad total=1024, Espacio usado=353
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 100, Estado 1
+Evaluando partición 1: Inicio 253, Tamaño 100, Estado 1
+Evaluando partición 2: Inicio -1, Tamaño -1, Estado 0
+Partición 2 es adecuada para First Fit: Inicio en 353, Tamaño 100
+Partición 'Part3' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=559, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia, categoria=P, nombre=Part4
+Debug: Capacidad total=1024, Espacio usado=453
+Espacio disponible en el disco: 571
+Debug: Capacidad total=1024, Espacio usado=453
+Debug: Capacidad total=1024, Espacio usado=453
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 100, Estado 1
+Evaluando partición 1: Inicio 253, Tamaño 100, Estado 1
+Evaluando partición 2: Inicio 353, Tamaño 100, Estado 1
+Evaluando partición 3: Inicio -1, Tamaño -1, Estado 0
+Partición 3 es adecuada para First Fit: Inicio en 453, Tamaño 559
+Partición 'Part4' creada exitosamente con el ajuste 'F'.
+La partición '                ' ha sido eliminada (fast).
+La partición '                ' ha sido eliminada (fast).
+El tamaño de la partición 'Part4           ' ha sido modificado. Nuevo tamaño: 359 bytes.
+Detalles internos: dimension=100, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia, categoria=P, nombre=Part5
+Debug: Capacidad total=1024, Espacio usado=612
+Espacio disponible en el disco: 412
+Debug: Capacidad total=1024, Espacio usado=612
+Debug: Capacidad total=1024, Espacio usado=612
+Iniciando First Fit...
+Evaluando partición 0: Inicio -1, Tamaño -1, Estado 1
+Partición 0 es adecuada para First Fit: Inicio en 153, Tamaño 100
+Partición 'Part5' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=100, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco2.mia, categoria=P, nombre=Part6
+Debug: Capacidad total=1024, Espacio usado=712
+Espacio disponible en el disco: 312
+Debug: Capacidad total=1024, Espacio usado=712
+Debug: Capacidad total=1024, Espacio usado=712
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 100, Estado 1
+Evaluando partición 1: Inicio 253, Tamaño 100, Estado 1
+Evaluando partición 2: Inicio -1, Tamaño -1, Estado 1
+Partición 2 es adecuada para First Fit: Inicio en 353, Tamaño 100
+Partición 'Part6' creada exitosamente con el ajuste 'F'.
+═══ MASTER BOOT RECORD ═══
+Capacidad: 62914560 bytes | Creado: 2025-10-27 00:49:36
+Firma: 1097644516 | Ajuste: F
+═══════════════════════════
+--------------------------------------------
+Detalles internos: dimension=20971520, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia, categoria=P, nombre=Part1
+Debug: Capacidad total=62914560, Espacio usado=153
+Espacio disponible en el disco: 62914407
+Debug: Capacidad total=62914560, Espacio usado=153
+Debug: Capacidad total=62914560, Espacio usado=153
+Iniciando First Fit...
+Evaluando partición 0: Inicio -1, Tamaño -1, Estado 0
+Partición 0 es adecuada para First Fit: Inicio en 153, Tamaño 20971520
+Partición 'Part1' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=10240, unidad=K, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia, categoria=P, nombre=Part2
+Debug: Capacidad total=62914560, Espacio usado=20971673
+Espacio disponible en el disco: 41942887
+Debug: Capacidad total=62914560, Espacio usado=20971673
+Debug: Capacidad total=62914560, Espacio usado=20971673
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 20971520, Estado 1
+Evaluando partición 1: Inicio -1, Tamaño -1, Estado 0
+Partición 1 es adecuada para First Fit: Inicio en 20971673, Tamaño 10485760
+Partición 'Part2' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=10, unidad=M, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia, categoria=P, nombre=Part3
+Debug: Capacidad total=62914560, Espacio usado=31457433
+Espacio disponible en el disco: 31457127
+Debug: Capacidad total=62914560, Espacio usado=31457433
+Debug: Capacidad total=62914560, Espacio usado=31457433
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 20971520, Estado 1
+Evaluando partición 1: Inicio 20971673, Tamaño 10485760, Estado 1
+Evaluando partición 2: Inicio -1, Tamaño -1, Estado 0
+Partición 2 es adecuada para First Fit: Inicio en 31457433, Tamaño 10485760
+Partición 'Part3' creada exitosamente con el ajuste 'F'.
+Detalles internos: dimension=10485760, unidad=B, ajuste=BF, ubicacion=/home/rodasjj/Calificacion_MIA/ResultadosP2/Disco1.mia, categoria=P, nombre=Part4
+Debug: Capacidad total=62914560, Espacio usado=41943193
+Espacio disponible en el disco: 20971367
+Debug: Capacidad total=62914560, Espacio usado=41943193
+Debug: Capacidad total=62914560, Espacio usado=41943193
+Iniciando First Fit...
+Evaluando partición 0: Inicio 153, Tamaño 20971520, Estado 1
+Evaluando partición 1: Inicio 20971673, Tamaño 10485760, Estado 1
+Evaluando partición 2: Inicio 31457433, Tamaño 10485760, Estado 1
+Evaluando partición 3: Inicio -1, Tamaño -1, Estado 0
+Partición 3 es adecuada para First Fit: Inicio en 41943193, Tamaño 10485760
+Partición 'Part4' creada exitosamente con el ajuste 'F'.
+La partición '                ' ha sido eliminada (fast).
+La partición '                ' ha sido eliminada (fast).
+El tamaño de la partición 'Part2           ' ha sido modificado. Nuevo tamaño: 9973760 bytes.
+El tamaño de la partición 'Part2           ' ha sido modificado. Nuevo tamaño: 10485760 bytes.
+
+Particion montada:
+Estado: 1 | Tipo: P | Ajuste: F | Inicio: 153 | Capacidad: 20971520 | Nombre: Part1            | Correlativo: 0 | ID: 891A
+
+Valor de n: 3504
+
+Inicio del SuperBlock: 153
+
+Fin del SuperBlock: 229
+
+Inicio del Journal: 229
+
+Fin del Journal: 343
+
+Inicio del Bitmap de Inodos: 5929
+
+Fin del Bitmap de Inodos: 9433
+
+Inicio del Bitmap de Bloques: 9433
+
+Fin del Bitmap de Bloques: 19945
+
+Inicio de Inodos: 19945
+
+SuperBlock:
+Campo                     Valor     
+------------------------- ----------
+Tipo de sistema archivos: 3         
+Total inodos creados:     0         
+Total bloques creados:    0         
+Bloques libres:           10512     
+Inodos libres:            3504      
+Ultimo montaje:           27/10/2025 00:50
+Ultimo desmontaje:        27/10/2025 00:50
+Veces montado:            1         
+Numero magico:            ef53      
+Dimension inodo:          88        
+Dimension bloque:         64        
+Primer inodo libre:       19945     
+Primer bloque libre:      328297    
+Inicio bitmap inodos:     5929      
+Inicio bitmap bloques:    9433      
+Inicio tabla inodos:      19945     
+Inicio tabla bloques:     328297    
+Inicializando área de journaling para EXT3...
+=== Inicializando área de journaling ===
+[DEBUG] Rango Journal  : [229, 5929)  (50 slots · 114 bytes c/u)
+[DEBUG] Journal.Encode: count=0, offset=229
+[DEBUG] slot=00 | off=229 | ok
+[DEBUG] Journal.Encode: count=1, offset=343
+[DEBUG] slot=01 | off=343 | ok
+[DEBUG] Journal.Encode: count=2, offset=457
+[DEBUG] slot=02 | off=457 | ok
+[DEBUG] Journal.Encode: count=3, offset=571
+[DEBUG] slot=03 | off=571 | ok
+[DEBUG] Journal.Encode: count=4, offset=685
+[DEBUG] slot=04 | off=685 | ok
+[DEBUG] Journal.Encode: count=5, offset=799
+[DEBUG] slot=05 | off=799 | ok
+[DEBUG] Journal.Encode: count=6, offset=913
+[DEBUG] slot=06 | off=913 | ok
+[DEBUG] Journal.Encode: count=7, offset=1027
+[DEBUG] slot=07 | off=1027 | ok
+[DEBUG] Journal.Encode: count=8, offset=1141
+[DEBUG] slot=08 | off=1141 | ok
+[DEBUG] Journal.Encode: count=9, offset=1255
+[DEBUG] slot=09 | off=1255 | ok
+[DEBUG] Journal.Encode: count=10, offset=1369
+[DEBUG] slot=10 | off=1369 | ok
+[DEBUG] Journal.Encode: count=11, offset=1483
+[DEBUG] slot=11 | off=1483 | ok
+[DEBUG] Journal.Encode: count=12, offset=1597
+[DEBUG] slot=12 | off=1597 | ok
+[DEBUG] Journal.Encode: count=13, offset=1711
+[DEBUG] slot=13 | off=1711 | ok
+[DEBUG] Journal.Encode: count=14, offset=1825
+[DEBUG] slot=14 | off=1825 | ok
+[DEBUG] Journal.Encode: count=15, offset=1939
+[DEBUG] slot=15 | off=1939 | ok
+[DEBUG] Journal.Encode: count=16, offset=2053
+[DEBUG] slot=16 | off=2053 | ok
+[DEBUG] Journal.Encode: count=17, offset=2167
+[DEBUG] slot=17 | off=2167 | ok
+[DEBUG] Journal.Encode: count=18, offset=2281
+[DEBUG] slot=18 | off=2281 | ok
+[DEBUG] Journal.Encode: count=19, offset=2395
+[DEBUG] slot=19 | off=2395 | ok
+[DEBUG] Journal.Encode: count=20, offset=2509
+[DEBUG] slot=20 | off=2509 | ok
+[DEBUG] Journal.Encode: count=21, offset=2623
+[DEBUG] slot=21 | off=2623 | ok
+[DEBUG] Journal.Encode: count=22, offset=2737
+[DEBUG] slot=22 | off=2737 | ok
+[DEBUG] Journal.Encode: count=23, offset=2851
+[DEBUG] slot=23 | off=2851 | ok
+[DEBUG] Journal.Encode: count=24, offset=2965
+[DEBUG] slot=24 | off=2965 | ok
+[DEBUG] Journal.Encode: count=25, offset=3079
+[DEBUG] slot=25 | off=3079 | ok
+[DEBUG] Journal.Encode: count=26, offset=3193
+[DEBUG] slot=26 | off=3193 | ok
+[DEBUG] Journal.Encode: count=27, offset=3307
+[DEBUG] slot=27 | off=3307 | ok
+[DEBUG] Journal.Encode: count=28, offset=3421
+[DEBUG] slot=28 | off=3421 | ok
+[DEBUG] Journal.Encode: count=29, offset=3535
+[DEBUG] slot=29 | off=3535 | ok
+[DEBUG] Journal.Encode: count=30, offset=3649
+[DEBUG] slot=30 | off=3649 | ok
+[DEBUG] Journal.Encode: count=31, offset=3763
+[DEBUG] slot=31 | off=3763 | ok
+[DEBUG] Journal.Encode: count=32, offset=3877
+[DEBUG] slot=32 | off=3877 | ok
+[DEBUG] Journal.Encode: count=33, offset=3991
+[DEBUG] slot=33 | off=3991 | ok
+[DEBUG] Journal.Encode: count=34, offset=4105
+[DEBUG] slot=34 | off=4105 | ok
+[DEBUG] Journal.Encode: count=35, offset=4219
+[DEBUG] slot=35 | off=4219 | ok
+[DEBUG] Journal.Encode: count=36, offset=4333
+[DEBUG] slot=36 | off=4333 | ok
+[DEBUG] Journal.Encode: count=37, offset=4447
+[DEBUG] slot=37 | off=4447 | ok
+[DEBUG] Journal.Encode: count=38, offset=4561
+[DEBUG] slot=38 | off=4561 | ok
+[DEBUG] Journal.Encode: count=39, offset=4675
+[DEBUG] slot=39 | off=4675 | ok
+[DEBUG] Journal.Encode: count=40, offset=4789
+[DEBUG] slot=40 | off=4789 | ok
+[DEBUG] Journal.Encode: count=41, offset=4903
+[DEBUG] slot=41 | off=4903 | ok
+[DEBUG] Journal.Encode: count=42, offset=5017
+[DEBUG] slot=42 | off=5017 | ok
+[DEBUG] Journal.Encode: count=43, offset=5131
+[DEBUG] slot=43 | off=5131 | ok
+[DEBUG] Journal.Encode: count=44, offset=5245
+[DEBUG] slot=44 | off=5245 | ok
+[DEBUG] Journal.Encode: count=45, offset=5359
+[DEBUG] slot=45 | off=5359 | ok
+[DEBUG] Journal.Encode: count=46, offset=5473
+[DEBUG] slot=46 | off=5473 | ok
+[DEBUG] Journal.Encode: count=47, offset=5587
+[DEBUG] slot=47 | off=5587 | ok
+[DEBUG] Journal.Encode: count=48, offset=5701
+[DEBUG] slot=48 | off=5701 | ok
+[DEBUG] Journal.Encode: count=49, offset=5815
+[DEBUG] slot=49 | off=5815 | ok
+Journal inicializado correctamente con 50 entradas
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 0
+Siguiente índice de journal disponible: 0
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 0
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=229
+Nueva entrada de journal agregada en índice 0: mkdir /
+Indice encontrado: 0
+=== Iniciando la asignacion de un nuevo inodo ===
+Inodo libre encontrado y asignado: 0
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 1
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=343
+Nueva entrada de journal agregada en índice 1: mkfile /users.txt
+Indice encontrado: 1
+=== Iniciando la asignacion de un nuevo inodo ===
+Inodo libre encontrado y asignado: 1
+Bloques
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+Entradas del Journal:
+Buscando entradas válidas de journal...
+Contenido actual del journal:
+[DEBUG] Journal.Decode: offset=229
+-- Entrada 0 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /                               
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 0: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 0 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=343
+-- Entrada 1 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkfile    
+I_path: /users.txt                      
+I_content: 1,G,root
+1,U,root,root,123
+                                     
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 1: operación='mkfile', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 1 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=457
+-- Entrada 2 --
+Journal:
+J_count: 2
+Informacion:
+I_operation:           
+I_path:                                 
+I_content:                                                                 
+I_date: 1969-12-31T18:00:00-06:00
+Se encontraron 2 entradas válidas de journal
+-- Entrada 0 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /                               
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+-- Entrada 1 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkfile    
+I_path: /users.txt                      
+I_content: 1,G,root
+1,U,root,root,123
+                                     
+I_date: 2025-10-27T00:50:00-06:00
+Sistema de archivos EXT3 inicializado correctamente con journaling
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Creando directorio 'calificacion' en bloque 0 posición 3
+Inodo libre encontrado y asignado: 2
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 2
+Nuevo bloque asignado: 2 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 2
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=457
+Nueva entrada de journal agregada en índice 2: mkdir /calificacion
+Operación 'mkdir /calificacion' registrada en journal exitosamente
+Directorio 'calificacion' creado exitosamente en inodo 2
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Creando directorio 'U2025' en bloque 2 posición 2
+Inodo libre encontrado y asignado: 3
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 3
+Nuevo bloque asignado: 3 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 3
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=571
+Nueva entrada de journal agregada en índice 3: mkdir /U2025
+Operación 'mkdir /U2025' registrada en journal exitosamente
+Directorio 'U2025' creado exitosamente en inodo 3
+Deserializando inodo 3
+Inodo 3 deserializado. Tipo: 0
+Procesando bloque 3 del inodo 3
+Verificando contenido en índice 2 del bloque 3
+Creando directorio '9noSemestre' en bloque 3 posición 2
+Inodo libre encontrado y asignado: 4
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 4
+Nuevo bloque asignado: 4 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 4
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=685
+Nueva entrada de journal agregada en índice 4: mkdir /9noSemestre
+Operación 'mkdir /9noSemestre' registrada en journal exitosamente
+Directorio '9noSemestre' creado exitosamente en inodo 4
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Bloques:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 5
+Nuevo bloque asignado: 5 en I_block[1]
+Añadido nuevo bloque 5 al directorio, reintentando creación
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 5 del inodo 0
+Verificando contenido en índice 2 del bloque 5
+Creando directorio 'calificacion' en bloque 5 posición 2
+Inodo libre encontrado y asignado: 5
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 6
+Nuevo bloque asignado: 6 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 5
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=799
+Nueva entrada de journal agregada en índice 5: mkdir /calificacion
+Operación 'mkdir /calificacion' registrada en journal exitosamente
+Directorio 'calificacion' creado exitosamente en inodo 5
+Deserializando inodo 5
+Inodo 5 deserializado. Tipo: 0
+Procesando bloque 6 del inodo 5
+Verificando contenido en índice 2 del bloque 6
+Creando directorio 'U2025' en bloque 6 posición 2
+Inodo libre encontrado y asignado: 6
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 7
+Nuevo bloque asignado: 7 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 6
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=913
+Nueva entrada de journal agregada en índice 6: mkdir /U2025
+Operación 'mkdir /U2025' registrada en journal exitosamente
+Directorio 'U2025' creado exitosamente en inodo 6
+Deserializando inodo 6
+Inodo 6 deserializado. Tipo: 0
+Procesando bloque 7 del inodo 6
+Verificando contenido en índice 2 del bloque 7
+Creando directorio '6toSemestre' en bloque 7 posición 2
+Inodo libre encontrado y asignado: 7
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 8
+Nuevo bloque asignado: 8 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 7
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1027
+Nueva entrada de journal agregada en índice 7: mkdir /6toSemestre
+Operación 'mkdir /6toSemestre' registrada en journal exitosamente
+Directorio '6toSemestre' creado exitosamente en inodo 7
+Deserializando inodo 7
+Inodo 7 deserializado. Tipo: 0
+Procesando bloque 8 del inodo 7
+Verificando contenido en índice 2 del bloque 8
+Creando directorio 'MIA' en bloque 8 posición 2
+Inodo libre encontrado y asignado: 8
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 9
+Nuevo bloque asignado: 9 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 8
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1141
+Nueva entrada de journal agregada en índice 8: mkdir /MIA
+Operación 'mkdir /MIA' registrada en journal exitosamente
+Directorio 'MIA' creado exitosamente en inodo 8
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 5:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 6:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 7:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 8:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Bloques:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 5:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: calificacion
+  Inodo: 5
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 6:
+Contenido 1:
+  Nombre: .           
+  Inodo: 5
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 6
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 7:
+Contenido 1:
+  Nombre: .           
+  Inodo: 6
+Contenido 2:
+  Nombre: ..          
+  Inodo: 5
+Contenido 3:
+  Nombre: 6toSemestre 
+  Inodo: 7
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 8:
+Contenido 1:
+  Nombre: .           
+  Inodo: 7
+Contenido 2:
+  Nombre: ..          
+  Inodo: 6
+Contenido 3:
+  Nombre: MIA         
+  Inodo: 8
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 9:
+Contenido 1:
+  Nombre: .           
+  Inodo: 8
+Contenido 2:
+  Nombre: ..          
+  Inodo: 7
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+Directorio o archivo '6toSemestre' no encontrado en inodo 3
+Directorio o archivo '6toSemestre' no encontrado en inodo 3
+Directorio 'calificacion' encontrado en inodo 2
+Directorio 'U2025' encontrado en inodo 3
+Directorio o archivo '6toSemestre' no encontrado en inodo 3
+Directorio o archivo '6toSemestre' no encontrado en inodo 3
+Directorio 'calificacion' encontrado en inodo 2
+Directorio 'U2025' encontrado en inodo 3
+Directorio o archivo '6toSemestre' no encontrado en inodo 3
+Directorio o archivo '6toSemestre' no encontrado en inodo 3
+Directorio 'calificacion' encontrado en inodo 2
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Comparando 'users.txt' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 0
+Comparando 'calificacion' con el nombre de la carpeta padre 'calificacion'
+Carpeta padre 'calificacion' encontrada en inodo 2
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 2
+Creando directorio 'TEST' en bloque 2 posición 3
+Inodo libre encontrado y asignado: 9
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 10
+Nuevo bloque asignado: 10 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1255
+[DEBUG] slot=09 | off=1255 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 9
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1255
+Nueva entrada de journal agregada en índice 9: mkdir /TEST
+Operación 'mkdir /TEST' registrada en journal exitosamente
+Directorio 'TEST' creado exitosamente en inodo 9
+Deserializando inodo 1
+Inodo 1 deserializado. Tipo: 1
+Inodo 1 no es una carpeta, es de tipo: 1
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Comparando 'U2025' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 2
+Comparando 'TEST' con el nombre de la carpeta padre 'calificacion'
+Inodo libre encontrado y asignado: 10
+Escribiendo datos: tamaño anterior=0, nuevo tamaño=768
+Asignando 12 bloques para almacenar 768 bytes
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 11
+Nuevo bloque asignado: 11 en I_block[0]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 12
+Nuevo bloque asignado: 12 en I_block[1]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 13
+Nuevo bloque asignado: 13 en I_block[2]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 14
+Nuevo bloque asignado: 14 en I_block[3]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 15
+Nuevo bloque asignado: 15 en I_block[4]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 16
+Nuevo bloque asignado: 16 en I_block[5]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 17
+Nuevo bloque asignado: 17 en I_block[6]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 18
+Nuevo bloque asignado: 18 en I_block[7]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 19
+Nuevo bloque asignado: 19 en I_block[8]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 20
+Nuevo bloque asignado: 20 en I_block[9]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 21
+Nuevo bloque asignado: 21 en I_block[10]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 22
+Nuevo bloque asignado: 22 en I_block[11]
+Bloque 11 escrito: 64 bytes (offset global: 64)
+Bloque 12 escrito: 64 bytes (offset global: 128)
+Bloque 13 escrito: 64 bytes (offset global: 192)
+Bloque 14 escrito: 64 bytes (offset global: 256)
+Bloque 15 escrito: 64 bytes (offset global: 320)
+Bloque 16 escrito: 64 bytes (offset global: 384)
+Bloque 17 escrito: 64 bytes (offset global: 448)
+Bloque 18 escrito: 64 bytes (offset global: 512)
+Bloque 19 escrito: 64 bytes (offset global: 576)
+Bloque 20 escrito: 64 bytes (offset global: 640)
+Bloque 21 escrito: 64 bytes (offset global: 704)
+Escritura completada exitosamente: 768 bytes en 12 bloques
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 5:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 6:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 7:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 8:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 9:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 1 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [10 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Bloques de datos:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 5:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: calificacion
+  Inodo: 5
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: TEST        
+  Inodo: 9
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 6:
+Contenido 1:
+  Nombre: .           
+  Inodo: 5
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 6
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 7:
+Contenido 1:
+  Nombre: .           
+  Inodo: 6
+Contenido 2:
+  Nombre: ..          
+  Inodo: 5
+Contenido 3:
+  Nombre: 6toSemestre 
+  Inodo: 7
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 8:
+Contenido 1:
+  Nombre: .           
+  Inodo: 7
+Contenido 2:
+  Nombre: ..          
+  Inodo: 6
+Contenido 3:
+  Nombre: MIA         
+  Inodo: 8
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 9:
+Contenido 1:
+  Nombre: .           
+  Inodo: 8
+Contenido 2:
+  Nombre: ..          
+  Inodo: 7
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 10:
+Contenido 1:
+  Nombre: .           
+  Inodo: 9
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: carnet.txt  
+  Inodo: 10
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+Inodo libre encontrado y asignado: 11
+Escribiendo datos: tamaño anterior=0, nuevo tamaño=768
+Asignando 12 bloques para almacenar 768 bytes
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 23
+Nuevo bloque asignado: 23 en I_block[0]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 24
+Nuevo bloque asignado: 24 en I_block[1]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 25
+Nuevo bloque asignado: 25 en I_block[2]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 26
+Nuevo bloque asignado: 26 en I_block[3]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 27
+Nuevo bloque asignado: 27 en I_block[4]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 28
+Nuevo bloque asignado: 28 en I_block[5]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 29
+Nuevo bloque asignado: 29 en I_block[6]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 30
+Nuevo bloque asignado: 30 en I_block[7]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 31
+Nuevo bloque asignado: 31 en I_block[8]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 32
+Nuevo bloque asignado: 32 en I_block[9]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 33
+Nuevo bloque asignado: 33 en I_block[10]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 34
+Nuevo bloque asignado: 34 en I_block[11]
+Bloque 23 escrito: 64 bytes (offset global: 64)
+Bloque 24 escrito: 64 bytes (offset global: 128)
+Bloque 25 escrito: 64 bytes (offset global: 192)
+Bloque 26 escrito: 64 bytes (offset global: 256)
+Bloque 27 escrito: 64 bytes (offset global: 320)
+Bloque 28 escrito: 64 bytes (offset global: 384)
+Bloque 29 escrito: 64 bytes (offset global: 448)
+Bloque 30 escrito: 64 bytes (offset global: 512)
+Bloque 31 escrito: 64 bytes (offset global: 576)
+Bloque 32 escrito: 64 bytes (offset global: 640)
+Bloque 33 escrito: 64 bytes (offset global: 704)
+Escritura completada exitosamente: 768 bytes en 12 bloques
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 5:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 6:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 7:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 8:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 9:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 2 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [10 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 10:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [11 12 13 14 15 16 17 18 19 20 21 22 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Bloques de datos:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 5:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: calificacion
+  Inodo: 5
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: TEST        
+  Inodo: 9
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 6:
+Contenido 1:
+  Nombre: .           
+  Inodo: 5
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 6
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 7:
+Contenido 1:
+  Nombre: .           
+  Inodo: 6
+Contenido 2:
+  Nombre: ..          
+  Inodo: 5
+Contenido 3:
+  Nombre: 6toSemestre 
+  Inodo: 7
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 8:
+Contenido 1:
+  Nombre: .           
+  Inodo: 7
+Contenido 2:
+  Nombre: ..          
+  Inodo: 6
+Contenido 3:
+  Nombre: MIA         
+  Inodo: 8
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 9:
+Contenido 1:
+  Nombre: .           
+  Inodo: 8
+Contenido 2:
+  Nombre: ..          
+  Inodo: 7
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 10:
+Contenido 1:
+  Nombre: .           
+  Inodo: 9
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: carnet.txt  
+  Inodo: 10
+Contenido 4:
+  Nombre: borrar.txt  
+  Inodo: 11
+
+Bloque 11:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 12:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 13:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 14:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 15:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 16:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 17:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 18:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 19:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 20:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 21:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 22:
+4567890123456789012345678901234567890123456789012345678901234567Directorio 'calificacion' encontrado en inodo 2
+Directorio 'TEST' encontrado en inodo 9
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Comparando 'users.txt' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 0
+Comparando 'calificacion' con el nombre de la carpeta padre 'calificacion'
+Carpeta padre 'calificacion' encontrada en inodo 2
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Comparando 'U2025' con el nombre de la carpeta padre 'TEST'
+Verificando contenido en índice 3 del bloque 2
+Comparando 'TEST' con el nombre de la carpeta padre 'TEST'
+Carpeta padre 'TEST' encontrada en inodo 9
+Deserializando inodo 9
+Inodo 9 deserializado. Tipo: 0
+Procesando bloque 10 del inodo 9
+Verificando contenido en índice 2 del bloque 10
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 10
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 35
+Nuevo bloque asignado: 35 en I_block[1]
+Añadido nuevo bloque 35 al directorio, reintentando creación
+Deserializando inodo 9
+Inodo 9 deserializado. Tipo: 0
+Procesando bloque 10 del inodo 9
+Verificando contenido en índice 2 del bloque 10
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 10
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 35 del inodo 9
+Verificando contenido en índice 2 del bloque 35
+Creando directorio 'BORRAME' en bloque 35 posición 2
+Inodo libre encontrado y asignado: 12
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 36
+Nuevo bloque asignado: 36 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1255
+[DEBUG] slot=09 | off=1255 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1369
+[DEBUG] slot=10 | off=1369 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 10
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1369
+Nueva entrada de journal agregada en índice 10: mkdir /BORRAME
+Operación 'mkdir /BORRAME' registrada en journal exitosamente
+Directorio 'BORRAME' creado exitosamente en inodo 12
+Deserializando inodo 1
+Inodo 1 deserializado. Tipo: 1
+Inodo 1 no es una carpeta, es de tipo: 1
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Comparando 'U2025' con el nombre de la carpeta padre 'TEST'
+Verificando contenido en índice 3 del bloque 2
+Comparando 'TEST' con el nombre de la carpeta padre 'TEST'
+Carpeta padre 'TEST' encontrada en inodo 9
+Deserializando inodo 9
+Inodo 9 deserializado. Tipo: 0
+Procesando bloque 10 del inodo 9
+Verificando contenido en índice 2 del bloque 10
+Comparando 'carnet.txt' con el nombre de la carpeta padre 'TEST'
+Verificando contenido en índice 3 del bloque 10
+Comparando 'borrar.txt' con el nombre de la carpeta padre 'TEST'
+Procesando bloque 35 del inodo 9
+Verificando contenido en índice 2 del bloque 35
+Comparando 'BORRAME' con el nombre de la carpeta padre 'TEST'
+Verificando contenido en índice 3 del bloque 35
+No se encontró carpeta padre en inodo 9 en la posición 3
+Inodo libre encontrado y asignado: 13
+Escribiendo datos: tamaño anterior=0, nuevo tamaño=768
+Asignando 12 bloques para almacenar 768 bytes
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 37
+Nuevo bloque asignado: 37 en I_block[0]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 38
+Nuevo bloque asignado: 38 en I_block[1]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 39
+Nuevo bloque asignado: 39 en I_block[2]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 40
+Nuevo bloque asignado: 40 en I_block[3]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 41
+Nuevo bloque asignado: 41 en I_block[4]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 42
+Nuevo bloque asignado: 42 en I_block[5]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 43
+Nuevo bloque asignado: 43 en I_block[6]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 44
+Nuevo bloque asignado: 44 en I_block[7]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 45
+Nuevo bloque asignado: 45 en I_block[8]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 46
+Nuevo bloque asignado: 46 en I_block[9]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 47
+Nuevo bloque asignado: 47 en I_block[10]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 48
+Nuevo bloque asignado: 48 en I_block[11]
+Bloque 37 escrito: 64 bytes (offset global: 64)
+Bloque 38 escrito: 64 bytes (offset global: 128)
+Bloque 39 escrito: 64 bytes (offset global: 192)
+Bloque 40 escrito: 64 bytes (offset global: 256)
+Bloque 41 escrito: 64 bytes (offset global: 320)
+Bloque 42 escrito: 64 bytes (offset global: 384)
+Bloque 43 escrito: 64 bytes (offset global: 448)
+Bloque 44 escrito: 64 bytes (offset global: 512)
+Bloque 45 escrito: 64 bytes (offset global: 576)
+Bloque 46 escrito: 64 bytes (offset global: 640)
+Bloque 47 escrito: 64 bytes (offset global: 704)
+Escritura completada exitosamente: 768 bytes en 12 bloques
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 5:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 6:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 7:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 8:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 9:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 3 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [10 35 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 10:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [11 12 13 14 15 16 17 18 19 20 21 22 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Inodo 11:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [23 24 25 26 27 28 29 30 31 32 33 34 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Bloques de datos:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 5:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: calificacion
+  Inodo: 5
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: TEST        
+  Inodo: 9
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 6:
+Contenido 1:
+  Nombre: .           
+  Inodo: 5
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 6
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 7:
+Contenido 1:
+  Nombre: .           
+  Inodo: 6
+Contenido 2:
+  Nombre: ..          
+  Inodo: 5
+Contenido 3:
+  Nombre: 6toSemestre 
+  Inodo: 7
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 8:
+Contenido 1:
+  Nombre: .           
+  Inodo: 7
+Contenido 2:
+  Nombre: ..          
+  Inodo: 6
+Contenido 3:
+  Nombre: MIA         
+  Inodo: 8
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 9:
+Contenido 1:
+  Nombre: .           
+  Inodo: 8
+Contenido 2:
+  Nombre: ..          
+  Inodo: 7
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 10:
+Contenido 1:
+  Nombre: .           
+  Inodo: 9
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: carnet.txt  
+  Inodo: 10
+Contenido 4:
+  Nombre: borrar.txt  
+  Inodo: 11
+
+Bloque 35:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: BORRAME     
+  Inodo: 12
+Contenido 4:
+  Nombre: cambiar_nomb
+  Inodo: 13
+
+Bloque 11:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 12:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 13:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 14:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 15:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 16:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 17:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 18:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 19:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 20:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 21:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 22:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 23:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 24:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 25:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 26:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 27:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 28:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 29:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 30:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 31:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 32:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 33:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 34:
+4567890123456789012345678901234567890123456789012345678901234567Directorio 'calificacion' encontrado en inodo 2
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Comparando 'users.txt' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 0
+Comparando 'calificacion' con el nombre de la carpeta padre 'calificacion'
+Carpeta padre 'calificacion' encontrada en inodo 2
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 2
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 49
+Nuevo bloque asignado: 49 en I_block[1]
+Añadido nuevo bloque 49 al directorio, reintentando creación
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 2
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 49 del inodo 2
+Verificando contenido en índice 2 del bloque 49
+Creando directorio 'COPY_TEST' en bloque 49 posición 2
+Inodo libre encontrado y asignado: 14
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 50
+Nuevo bloque asignado: 50 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1255
+[DEBUG] slot=09 | off=1255 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1369
+[DEBUG] slot=10 | off=1369 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1483
+[DEBUG] slot=11 | off=1483 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 11
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1483
+Nueva entrada de journal agregada en índice 11: mkdir /COPY_TEST
+Operación 'mkdir /COPY_TEST' registrada en journal exitosamente
+Directorio 'COPY_TEST' creado exitosamente en inodo 14
+Deserializando inodo 1
+Inodo 1 deserializado. Tipo: 1
+Inodo 1 no es una carpeta, es de tipo: 1
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Comparando 'U2025' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 2
+Comparando 'TEST' con el nombre de la carpeta padre 'calificacion'
+Procesando bloque 49 del inodo 2
+Verificando contenido en índice 2 del bloque 49
+Comparando 'COPY_TEST' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 49
+No se encontró carpeta padre en inodo 2 en la posición 3
+Inodo libre encontrado y asignado: 15
+Escribiendo datos: tamaño anterior=0, nuevo tamaño=768
+Asignando 12 bloques para almacenar 768 bytes
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 51
+Nuevo bloque asignado: 51 en I_block[0]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 52
+Nuevo bloque asignado: 52 en I_block[1]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 53
+Nuevo bloque asignado: 53 en I_block[2]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 54
+Nuevo bloque asignado: 54 en I_block[3]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 55
+Nuevo bloque asignado: 55 en I_block[4]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 56
+Nuevo bloque asignado: 56 en I_block[5]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 57
+Nuevo bloque asignado: 57 en I_block[6]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 58
+Nuevo bloque asignado: 58 en I_block[7]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 59
+Nuevo bloque asignado: 59 en I_block[8]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 60
+Nuevo bloque asignado: 60 en I_block[9]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 61
+Nuevo bloque asignado: 61 en I_block[10]
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 62
+Nuevo bloque asignado: 62 en I_block[11]
+Bloque 51 escrito: 64 bytes (offset global: 64)
+Bloque 52 escrito: 64 bytes (offset global: 128)
+Bloque 53 escrito: 64 bytes (offset global: 192)
+Bloque 54 escrito: 64 bytes (offset global: 256)
+Bloque 55 escrito: 64 bytes (offset global: 320)
+Bloque 56 escrito: 64 bytes (offset global: 384)
+Bloque 57 escrito: 64 bytes (offset global: 448)
+Bloque 58 escrito: 64 bytes (offset global: 512)
+Bloque 59 escrito: 64 bytes (offset global: 576)
+Bloque 60 escrito: 64 bytes (offset global: 640)
+Bloque 61 escrito: 64 bytes (offset global: 704)
+Escritura completada exitosamente: 768 bytes en 12 bloques
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 49 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 5:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 6:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 7:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 8:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 9:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 3 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [10 35 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 10:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [11 12 13 14 15 16 17 18 19 20 21 22 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Inodo 11:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [23 24 25 26 27 28 29 30 31 32 33 34 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Inodo 12:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [36 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Bloques de datos:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 5:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: calificacion
+  Inodo: 5
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: TEST        
+  Inodo: 9
+
+Bloque 49:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: COPY_TEST   
+  Inodo: 14
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 6:
+Contenido 1:
+  Nombre: .           
+  Inodo: 5
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 6
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 7:
+Contenido 1:
+  Nombre: .           
+  Inodo: 6
+Contenido 2:
+  Nombre: ..          
+  Inodo: 5
+Contenido 3:
+  Nombre: 6toSemestre 
+  Inodo: 7
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 8:
+Contenido 1:
+  Nombre: .           
+  Inodo: 7
+Contenido 2:
+  Nombre: ..          
+  Inodo: 6
+Contenido 3:
+  Nombre: MIA         
+  Inodo: 8
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 9:
+Contenido 1:
+  Nombre: .           
+  Inodo: 8
+Contenido 2:
+  Nombre: ..          
+  Inodo: 7
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 10:
+Contenido 1:
+  Nombre: .           
+  Inodo: 9
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: carnet.txt  
+  Inodo: 10
+Contenido 4:
+  Nombre: borrar.txt  
+  Inodo: 11
+
+Bloque 35:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: BORRAME     
+  Inodo: 12
+Contenido 4:
+  Nombre: cambiar_nomb
+  Inodo: 13
+
+Bloque 11:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 12:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 13:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 14:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 15:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 16:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 17:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 18:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 19:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 20:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 21:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 22:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 23:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 24:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 25:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 26:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 27:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 28:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 29:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 30:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 31:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 32:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 33:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 34:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 36:
+Contenido 1:
+  Nombre: .           
+  Inodo: 12
+Contenido 2:
+  Nombre: ..          
+  Inodo: 9
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 63
+Nuevo bloque asignado: 63 en I_block[2]
+Inodo libre encontrado y asignado: 16
+Escribiendo datos: tamaño anterior=0, nuevo tamaño=0
+
+Inodos:
+
+Inodos
+----------------
+
+Inodo 0:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [0 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 777
+
+Inodo 1:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 27 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 777
+
+Inodo 2:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [2 49 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 3:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [3 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 4:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [4 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 5:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [6 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 6:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [7 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 7:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [8 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 8:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 9:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 4 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [10 35 63 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 10:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [11 12 13 14 15 16 17 18 19 20 21 22 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Inodo 11:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [23 24 25 26 27 28 29 30 31 32 33 34 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Inodo 12:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 0 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [36 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+Tipo de elemento: 0
+Permisos: 664
+
+Inodo 13:
+UID propietario: 1
+GID grupo: 1
+Dimension archivo: 768 bytes
+Ultimo acceso: 2025-10-27T00:49:36-06:00
+Ultimo cambio de permisos: 2025-10-27T00:49:36-06:00
+Ultima modificacion: 2025-10-27T00:49:36-06:00
+Bloques asignados: [37 38 39 40 41 42 43 44 45 46 47 48 -1 -1 -1]
+Tipo de elemento: 1
+Permisos: 664
+
+Bloques de datos:
+
+Bloques
+----------------
+
+Bloque 0:
+Contenido 1:
+  Nombre: .           
+  Inodo: 0
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: users.txt   
+  Inodo: 1
+Contenido 4:
+  Nombre: calificacion
+  Inodo: 2
+
+Bloque 5:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: calificacion
+  Inodo: 5
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 1:
+1,G,root
+1,U,root,root,123
+
+Bloque 2:
+Contenido 1:
+  Nombre: .           
+  Inodo: 2
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 3
+Contenido 4:
+  Nombre: TEST        
+  Inodo: 9
+
+Bloque 49:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: COPY_TEST   
+  Inodo: 14
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 3:
+Contenido 1:
+  Nombre: .           
+  Inodo: 3
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: 9noSemestre 
+  Inodo: 4
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 4:
+Contenido 1:
+  Nombre: .           
+  Inodo: 4
+Contenido 2:
+  Nombre: ..          
+  Inodo: 3
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 6:
+Contenido 1:
+  Nombre: .           
+  Inodo: 5
+Contenido 2:
+  Nombre: ..          
+  Inodo: 0
+Contenido 3:
+  Nombre: U2025       
+  Inodo: 6
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 7:
+Contenido 1:
+  Nombre: .           
+  Inodo: 6
+Contenido 2:
+  Nombre: ..          
+  Inodo: 5
+Contenido 3:
+  Nombre: 6toSemestre 
+  Inodo: 7
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 8:
+Contenido 1:
+  Nombre: .           
+  Inodo: 7
+Contenido 2:
+  Nombre: ..          
+  Inodo: 6
+Contenido 3:
+  Nombre: MIA         
+  Inodo: 8
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 9:
+Contenido 1:
+  Nombre: .           
+  Inodo: 8
+Contenido 2:
+  Nombre: ..          
+  Inodo: 7
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 10:
+Contenido 1:
+  Nombre: .           
+  Inodo: 9
+Contenido 2:
+  Nombre: ..          
+  Inodo: 2
+Contenido 3:
+  Nombre: carnet.txt  
+  Inodo: 10
+Contenido 4:
+  Nombre: borrar.txt  
+  Inodo: 11
+
+Bloque 35:
+Contenido 1:
+  Nombre: -           
+  Inodo: -1
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: BORRAME     
+  Inodo: 12
+Contenido 4:
+  Nombre: cambiar_nomb
+  Inodo: 13
+
+Bloque 63:
+Contenido 1:
+  Nombre: nombre.txt  
+  Inodo: 16
+Contenido 2:
+  Nombre: -           
+  Inodo: -1
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 11:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 12:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 13:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 14:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 15:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 16:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 17:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 18:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 19:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 20:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 21:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 22:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 23:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 24:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 25:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 26:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 27:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 28:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 29:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 30:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 31:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 32:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 33:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 34:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 36:
+Contenido 1:
+  Nombre: .           
+  Inodo: 12
+Contenido 2:
+  Nombre: ..          
+  Inodo: 9
+Contenido 3:
+  Nombre: -           
+  Inodo: -1
+Contenido 4:
+  Nombre: -           
+  Inodo: -1
+
+Bloque 37:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 38:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 39:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 40:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 41:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 42:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 43:
+4567890123456789012345678901234567890123456789012345678901234567
+Bloque 44:
+8901234567890123456789012345678901234567890123456789012345678901
+Bloque 45:
+2345678901234567890123456789012345678901234567890123456789012345
+Bloque 46:
+6789012345678901234567890123456789012345678901234567890123456789
+Bloque 47:
+0123456789012345678901234567890123456789012345678901234567890123
+Bloque 48:
+4567890123456789012345678901234567890123456789012345678901234567Directorio 'calificacion' encontrado en inodo 2
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Comparando 'users.txt' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 0
+Comparando 'calificacion' con el nombre de la carpeta padre 'calificacion'
+Carpeta padre 'calificacion' encontrada en inodo 2
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 2
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 49 del inodo 2
+Verificando contenido en índice 2 del bloque 49
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 49
+Creando directorio 'MOVE' en bloque 49 posición 3
+Inodo libre encontrado y asignado: 17
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 64
+Nuevo bloque asignado: 64 en I_block[0]
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1255
+[DEBUG] slot=09 | off=1255 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1369
+[DEBUG] slot=10 | off=1369 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1483
+[DEBUG] slot=11 | off=1483 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1597
+[DEBUG] slot=12 | off=1597 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 12
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1597
+Nueva entrada de journal agregada en índice 12: mkdir /MOVE
+Operación 'mkdir /MOVE' registrada en journal exitosamente
+Directorio 'MOVE' creado exitosamente en inodo 17
+Deserializando inodo 1
+Inodo 1 deserializado. Tipo: 1
+Inodo 1 no es una carpeta, es de tipo: 1
+Deserializando inodo 2
+Inodo 2 deserializado. Tipo: 0
+Procesando bloque 2 del inodo 2
+Verificando contenido en índice 2 del bloque 2
+Comparando 'U2025' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 2
+Comparando 'TEST' con el nombre de la carpeta padre 'calificacion'
+Procesando bloque 49 del inodo 2
+Verificando contenido en índice 2 del bloque 49
+Comparando 'COPY_TEST' con el nombre de la carpeta padre 'calificacion'
+Verificando contenido en índice 3 del bloque 49
+Comparando 'MOVE' con el nombre de la carpeta padre 'calificacion'
+Intentando eliminar archivo 'borrar.txt'
+Archivo 'borrar.txt' encontrado en inodo 11, eliminando.
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+Datos leídos exitosamente: 768 bytes desde 12 bloques
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1255
+[DEBUG] slot=09 | off=1255 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1369
+[DEBUG] slot=10 | off=1369 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1483
+[DEBUG] slot=11 | off=1483 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1597
+[DEBUG] slot=12 | off=1597 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1711
+[DEBUG] slot=13 | off=1711 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 13
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1711
+Nueva entrada de journal agregada en índice 13: rm /borrar.txt
+Operación 'rm /borrar.txt' registrada en journal correctamente
+Liberados 12 bloques del inodo exitosamente
+Archivo 'borrar.txt' eliminado correctamente.
+Archivo 'borrar.txt' eliminado correctamente.
+Intentando eliminar archivo 'BORRAME'
+Archivo 'BORRAME' encontrado en inodo 12, eliminando.
+Intentando eliminar carpeta 'BORRAME'
+Ruta completa para eliminación: /calificacion/TEST/BORRAME
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] Superblock.InicioJournal: bm_inode_start=5929, journalSize=114, entries=50 -> start=229
+[DEBUG] ⟶ Escanear Journal | inicio=229 | slots=50 | tamañoEntrada=114 bytes
+[DEBUG] Journal.Decode: offset=229
+[DEBUG] slot=00 | off=229 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=343
+[DEBUG] slot=01 | off=343 | op='mkfile    ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=457
+[DEBUG] slot=02 | off=457 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=571
+[DEBUG] slot=03 | off=571 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=685
+[DEBUG] slot=04 | off=685 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=799
+[DEBUG] slot=05 | off=799 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=913
+[DEBUG] slot=06 | off=913 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1027
+[DEBUG] slot=07 | off=1027 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1141
+[DEBUG] slot=08 | off=1141 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1255
+[DEBUG] slot=09 | off=1255 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1369
+[DEBUG] slot=10 | off=1369 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1483
+[DEBUG] slot=11 | off=1483 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1597
+[DEBUG] slot=12 | off=1597 | op='mkdir     ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1711
+[DEBUG] slot=13 | off=1711 | op='rm        ' | fecha=1761547800
+[DEBUG] Journal.Decode: offset=1825
+[DEBUG] slot=14 | off=1825 | op='          ' | fecha=0
+[DEBUG] ⇒ slot libre encontrado en índice 14
+[DEBUG] Superblock.FinJournal: bm_inode_start=5929 -> end=5929
+[DEBUG] Journal.Encode: count=0, offset=1825
+Nueva entrada de journal agregada en índice 14: rmdir /calificacion/TEST/BORRAME
+Operación 'rmdir /calificacion/TEST/BORRAME' registrada en journal exitosamente
+Liberados 1 bloques del inodo exitosamente
+Carpeta en inodo 12 eliminada exitosamente.
+Carpeta 'BORRAME' eliminada exitosamente del sistema
+Carpeta 'BORRAME' eliminada correctamente.
+Inodo libre encontrado y asignado: 11
+Indice encontrado: 23
+Inodo libre encontrado y asignado: 12
+Escribiendo datos: tamaño anterior=768, nuevo tamaño=768
+Inodo libre encontrado y asignado: 18
+Escribiendo datos: tamaño anterior=768, nuevo tamaño=768
+Directorio o archivo 'moveme.txt' no encontrado en inodo 2
+Leyendo journal desde posición 229
+Buscando entradas válidas de journal...
+Contenido actual del journal:
+[DEBUG] Journal.Decode: offset=229
+-- Entrada 0 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /                               
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 0: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 0 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=343
+-- Entrada 1 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkfile    
+I_path: /users.txt                      
+I_content: 1,G,root
+1,U,root,root,123
+                                     
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 1: operación='mkfile', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 1 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=457
+-- Entrada 2 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /calificacion                   
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 2: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 2 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=571
+-- Entrada 3 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /U2025                          
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 3: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 3 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=685
+-- Entrada 4 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /9noSemestre                    
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 4: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 4 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=799
+-- Entrada 5 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /calificacion                   
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 5: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 5 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=913
+-- Entrada 6 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /U2025                          
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 6: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 6 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1027
+-- Entrada 7 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /6toSemestre                    
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 7: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 7 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1141
+-- Entrada 8 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /MIA                            
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 8: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 8 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1255
+-- Entrada 9 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /TEST                           
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 9: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 9 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1369
+-- Entrada 10 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /BORRAME                        
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 10: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 10 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1483
+-- Entrada 11 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /COPY_TEST                      
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 11: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 11 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1597
+-- Entrada 12 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /MOVE                           
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 12: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 12 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1711
+-- Entrada 13 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: rm        
+I_path: /borrar.txt                     
+I_content: 0123456789012345678901234567890123456789012345678901234567890123
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 13: operación='rm', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 13 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1825
+-- Entrada 14 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: rmdir     
+I_path: /calificacion/TEST/BORRAME      
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 14: operación='rmdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 14 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1939
+-- Entrada 15 --
+Journal:
+J_count: 15
+Informacion:
+I_operation:           
+I_path:                                 
+I_content:                                                                 
+I_date: 1969-12-31T18:00:00-06:00
+Se encontraron 15 entradas válidas de journal
+Se encontraron 15 entradas válidas de journal
+[LOSS] Simulando LOSS — inodos=3504  bloques=10512
+[LOSS]   ↳ 438 bytes limpiados en rango [5929, 6367)
+[LOSS]   ↳ 1314 bytes limpiados en rango [9433, 10747)
+[LOSS]   ↳ 308352 bytes limpiados en rango [19945, 328297)
+[LOSS]   ↳ 672768 bytes limpiados en rango [328297, 1001065)
+[RECUPERACION]  Iniciando recuperación EXT3…
+[RECUPERACION]  Limpieza de bitmaps, inodos y bloques…
+[LOSS] Simulando LOSS — inodos=3504  bloques=10512
+[LOSS]   ↳ 438 bytes limpiados en rango [5929, 6367)
+[LOSS]   ↳ 1314 bytes limpiados en rango [9433, 10747)
+[LOSS]   ↳ 308352 bytes limpiados en rango [19945, 328297)
+[LOSS]   ↳ 672768 bytes limpiados en rango [328297, 1001065)
+[RECUPERACION]  Inicializando inodo 0 como directorio raíz
+[RECUPERACION]  Leyendo journal en posición=229
+Buscando entradas válidas de journal...
+Contenido actual del journal:
+[DEBUG] Journal.Decode: offset=229
+-- Entrada 0 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /                               
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 0: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 0 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=343
+-- Entrada 1 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkfile    
+I_path: /users.txt                      
+I_content: 1,G,root
+1,U,root,root,123
+                                     
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 1: operación='mkfile', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 1 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=457
+-- Entrada 2 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /calificacion                   
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 2: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 2 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=571
+-- Entrada 3 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /U2025                          
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 3: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 3 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=685
+-- Entrada 4 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /9noSemestre                    
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 4: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 4 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=799
+-- Entrada 5 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /calificacion                   
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 5: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 5 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=913
+-- Entrada 6 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /U2025                          
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 6: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 6 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1027
+-- Entrada 7 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /6toSemestre                    
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 7: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 7 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1141
+-- Entrada 8 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /MIA                            
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 8: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 8 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1255
+-- Entrada 9 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /TEST                           
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 9: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 9 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1369
+-- Entrada 10 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /BORRAME                        
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 10: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 10 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1483
+-- Entrada 11 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /COPY_TEST                      
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 11: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 11 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1597
+-- Entrada 12 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: mkdir     
+I_path: /MOVE                           
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 12: operación='mkdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 12 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1711
+-- Entrada 13 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: rm        
+I_path: /borrar.txt                     
+I_content: 0123456789012345678901234567890123456789012345678901234567890123
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 13: operación='rm', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 13 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1825
+-- Entrada 14 --
+Journal:
+J_count: 0
+Informacion:
+I_operation: rmdir     
+I_path: /calificacion/TEST/BORRAME      
+I_content:                                                                 
+I_date: 2025-10-27T00:50:00-06:00
+[DEBUG] - Validando entrada 14: operación='rmdir', fechaUnix=1761547800, fecha=2025-10-27T00:50:00-06:00
+[DEBUG] - Entrada 14 ACEPTADA ✓
+[DEBUG] Journal.Decode: offset=1939
+-- Entrada 15 --
+Journal:
+J_count: 15
+Informacion:
+I_operation:           
+I_path:                                 
+I_content:                                                                 
+I_date: 1969-12-31T18:00:00-06:00
+Se encontraron 15 entradas válidas de journal
+[RECUPERACION]  15 entrada(s) válida(s) encontradas
+[RECUPERACION:01] mkdir   /
+[RECUPERACION:01]   • mkdir / → ignorado (raíz ya existe)
+[RECUPERACION:02] mkfile  /users.txt
+Inodo libre encontrado y asignado: 1
+Escribiendo datos: tamaño anterior=0, nuevo tamaño=26
+Asignando 1 bloques para almacenar 26 bytes
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 1
+Nuevo bloque asignado: 1 en I_block[0]
+Escritura completada exitosamente: 26 bytes en 1 bloques
+[RECUPERACION:02]   ✓ archivo (26 bytes) creado
+[RECUPERACION:03] mkdir   /calificacion
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Creando directorio 'calificacion' en bloque 0 posición 3
+Inodo libre encontrado y asignado: 2
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 2
+Nuevo bloque asignado: 2 en I_block[0]
+Directorio 'calificacion' creado exitosamente en inodo 2
+[RECUPERACION:03]   ✓ carpeta creada
+[RECUPERACION:04] mkdir   /U2025
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 3
+Nuevo bloque asignado: 3 en I_block[1]
+Añadido nuevo bloque 3 al directorio, reintentando creación
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Creando directorio 'U2025' en bloque 3 posición 2
+Inodo libre encontrado y asignado: 3
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 4
+Nuevo bloque asignado: 4 en I_block[0]
+Directorio 'U2025' creado exitosamente en inodo 3
+[RECUPERACION:04]   ✓ carpeta creada
+[RECUPERACION:05] mkdir   /9noSemestre
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Creando directorio '9noSemestre' en bloque 3 posición 3
+Inodo libre encontrado y asignado: 4
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 5
+Nuevo bloque asignado: 5 en I_block[0]
+Directorio '9noSemestre' creado exitosamente en inodo 4
+[RECUPERACION:05]   ✓ carpeta creada
+[RECUPERACION:06] mkdir   /calificacion
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 6
+Nuevo bloque asignado: 6 en I_block[2]
+Añadido nuevo bloque 6 al directorio, reintentando creación
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Creando directorio 'calificacion' en bloque 6 posición 2
+Inodo libre encontrado y asignado: 5
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 7
+Nuevo bloque asignado: 7 en I_block[0]
+Directorio 'calificacion' creado exitosamente en inodo 5
+[RECUPERACION:06]   ✓ carpeta creada
+[RECUPERACION:07] mkdir   /U2025
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Creando directorio 'U2025' en bloque 6 posición 3
+Inodo libre encontrado y asignado: 6
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 8
+Nuevo bloque asignado: 8 en I_block[0]
+Directorio 'U2025' creado exitosamente en inodo 6
+[RECUPERACION:07]   ✓ carpeta creada
+[RECUPERACION:08] mkdir   /6toSemestre
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 9
+Nuevo bloque asignado: 9 en I_block[3]
+Añadido nuevo bloque 9 al directorio, reintentando creación
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Creando directorio '6toSemestre' en bloque 9 posición 2
+Inodo libre encontrado y asignado: 7
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 10
+Nuevo bloque asignado: 10 en I_block[0]
+Directorio '6toSemestre' creado exitosamente en inodo 7
+[RECUPERACION:08]   ✓ carpeta creada
+[RECUPERACION:09] mkdir   /MIA
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Creando directorio 'MIA' en bloque 9 posición 3
+Inodo libre encontrado y asignado: 8
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 11
+Nuevo bloque asignado: 11 en I_block[0]
+Directorio 'MIA' creado exitosamente en inodo 8
+[RECUPERACION:09]   ✓ carpeta creada
+[RECUPERACION:10] mkdir   /TEST
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 12
+Nuevo bloque asignado: 12 en I_block[4]
+Añadido nuevo bloque 12 al directorio, reintentando creación
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 12 del inodo 0
+Verificando contenido en índice 2 del bloque 12
+Creando directorio 'TEST' en bloque 12 posición 2
+Inodo libre encontrado y asignado: 9
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 13
+Nuevo bloque asignado: 13 en I_block[0]
+Directorio 'TEST' creado exitosamente en inodo 9
+[RECUPERACION:10]   ✓ carpeta creada
+[RECUPERACION:11] mkdir   /BORRAME
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 12 del inodo 0
+Verificando contenido en índice 2 del bloque 12
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 12
+Creando directorio 'BORRAME' en bloque 12 posición 3
+Inodo libre encontrado y asignado: 10
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 14
+Nuevo bloque asignado: 14 en I_block[0]
+Directorio 'BORRAME' creado exitosamente en inodo 10
+[RECUPERACION:11]   ✓ carpeta creada
+[RECUPERACION:12] mkdir   /COPY_TEST
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 12 del inodo 0
+Verificando contenido en índice 2 del bloque 12
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 12
+Posición 3 ya ocupada, probando siguiente
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 15
+Nuevo bloque asignado: 15 en I_block[5]
+Añadido nuevo bloque 15 al directorio, reintentando creación
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 12 del inodo 0
+Verificando contenido en índice 2 del bloque 12
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 12
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 15 del inodo 0
+Verificando contenido en índice 2 del bloque 15
+Creando directorio 'COPY_TEST' en bloque 15 posición 2
+Inodo libre encontrado y asignado: 11
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 16
+Nuevo bloque asignado: 16 en I_block[0]
+Directorio 'COPY_TEST' creado exitosamente en inodo 11
+[RECUPERACION:12]   ✓ carpeta creada
+[RECUPERACION:13] mkdir   /MOVE
+Deserializando inodo 0
+Inodo 0 deserializado. Tipo: 0
+Procesando bloque 0 del inodo 0
+Verificando contenido en índice 2 del bloque 0
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 0
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 3 del inodo 0
+Verificando contenido en índice 2 del bloque 3
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 3
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 6 del inodo 0
+Verificando contenido en índice 2 del bloque 6
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 6
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 9 del inodo 0
+Verificando contenido en índice 2 del bloque 9
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 9
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 12 del inodo 0
+Verificando contenido en índice 2 del bloque 12
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 12
+Posición 3 ya ocupada, probando siguiente
+Procesando bloque 15 del inodo 0
+Verificando contenido en índice 2 del bloque 15
+Posición 2 ya ocupada, probando siguiente
+Verificando contenido en índice 3 del bloque 15
+Creando directorio 'MOVE' en bloque 15 posición 3
+Inodo libre encontrado y asignado: 12
+=== Iniciando la asignacion de un nuevo bloque ===
+Indice encontrado: 17
+Nuevo bloque asignado: 17 en I_block[0]
+Directorio 'MOVE' creado exitosamente en inodo 12
+[RECUPERACION:13]   ✓ carpeta creada
+[RECUPERACION:14] rm      /borrar.txt
+[RECUPERACION:14]   • operación rm no soportada (omitida)
+[RECUPERACION:15] rmdir   /calificacion/TEST/BORRAME
+[RECUPERACION:15]   • operación rmdir no soportada (omitida)
+[RECUPERACION]  Superbloque actualizado y escrito
+Entrada:  mounted
+
+
+
+Entrada:  mounted
+Entrada:  mounted
+
+
+Entrada:  mounted
+signal: terminated

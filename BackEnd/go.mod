@@ -1,6 +1,6 @@
 module backend
 
-go 1.24.5
+go 1.23sudo docker run --rm -p 3000:3000 --name mia-backend mia-backend:latest
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.9 // Web/API
